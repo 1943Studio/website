@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="1943Studio.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>1943 Studio - Game Downloader</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: rgb(7, 53, 255);
+            font-family: system-ui, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            min-height: 100vh;
+            border: 17px solid rgb(0, 0, 0);
+
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            background-color: rgb(76, 0, 255);
+            width: 100%;
+            padding: 1.2rem 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+        }
+
+        #oooo {
+            width: 3cm;
+            height: 3cm;
+            object-fit: contain;
+            display: block;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        header h1 {
+            font-size: 100px;
+            text-align: center;
+            color: white;
+            -webkit-text-stroke: 3px black;
+            text-stroke: 3px black;
+            text-shadow: 6px 6px 12px rgba(0, 0, 0, 0.5), 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.02em;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 900px) {
+            header h1 {
+                font-size: 12vw;
+                white-space: normal;
+                word-break: keep-all;
+                -webkit-text-stroke: 2.5px black;
+                text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5), 2px 2px 5px rgba(0, 0, 0, 0.3);
+            }
+
+            header {
+                gap: 16px;
+                padding: 1rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 650px) {
+            header {
+                gap: 12px;
+                padding: 0.9rem 1.2rem;
+            }
+
+            header h1 {
+                font-size: 11vw;
+                -webkit-text-stroke: 2px black;
+                text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5), 1px 1px 3px rgba(0, 0, 0, 0.3);
+            }
+
+            #oooo {
+                width: 2.8cm;
+                height: 2.8cm;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                gap: 10px;
+                padding: 0.8rem 1rem;
+            }
+
+            header h1 {
+                font-size: 10vw;
+                white-space: normal;
+                -webkit-text-stroke: 2px black;
+                text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6), 1px 1px 3px rgba(0, 0, 0, 0.4);
+            }
+
+            #oooo {
+                width: 2.6cm;
+                height: 2.6cm;
+            }
+        }
+
+        @media (max-width: 380px) {
+            header h1 {
+                font-size: 9vw;
+                -webkit-text-stroke: 1.8px black;
+                text-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
+            }
+
+            #oooo {
+                width: 2.4cm;
+                height: 2.4cm;
+            }
+
+            header {
+                gap: 8px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            header h1 {
+                font-size: 100px;
+                white-space: nowrap;
+                -webkit-text-stroke: 3px black;
+                text-shadow: 6px 6px 12px rgba(0, 0, 0, 0.6), 3px 3px 6px rgba(0, 0, 0, 0.4);
+            }
+
+            #oooo {
+                width: 3cm;
+                height: 3cm;
+            }
+        }
+
+        #aaa {
+            border-radius: 16px;
+            margin: 2rem;
+            padding: 1rem;
+            background-color: rgb(255, 255, 255);
+        }
+
+        #aaa h1 {
+            font-size: 46px;
+        }
+
+        #aaa p {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .game {
+            border-radius: 24px;
+            background-color: rgb(211, 224, 226);
+            margin: 2rem;
+            padding: 1rem;
+        }
+
+        .game h1 {
+            font-size: 26px;
+        }
+
+        #discription1 {
+            display: none;
+        }
+
+        .b1 {
+            font-weight: 2;
+            cursor: pointer;
+            color: #0056b3;
+            text-decoration: underline;
+            transition: opacity 0.2s;
+        }
+        
+        .b1:hover {
+            opacity: 0.7;
+        }
+
+        .imager {
+            width: 12cm;
+            height: 7cm;
+            border-width: 0.25cm;
+            border-style: solid;
+            border-color: rgb(0, 0, 0);
+            margin: 0cm;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .imager1 {
+            width: 12cm;
+            height: 7cm;
+            border-width: 0.25cm;
+            border-style: solid;
+            border-color: rgb(0, 0, 0);
+            margin: 0cm;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .Downloader {
+            background-color: #00a86b;
+            width: 4.3cm;
+            height: 2cm;
+            transform: skew(-35deg);
+            font-size: x-large;
+            font-weight: 800;
+            border-radius: 45px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: white;
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .Downloader:hover {
+            background-color: #008f5c;
+            transform: skew(-35deg) scale(1.02);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+        }
+        
+        .Downloader:active {
+            transform: skew(-35deg) scale(0.98);
+        }
+        
+        @media (max-width: 600px) {
+            .Downloader {
+                width: 3.8cm;
+                height: 1.8cm;
+                font-size: large;
+                transform: skew(-25deg);
+            }
+            .imager, .imager1 {
+                width: 100%;
+                max-width: 280px;
+                height: auto;
+                aspect-ratio: 12 / 7;
+            }
+        }
+        
+        .game-info {
+            margin-top: 1rem;
+            line-height: 1.5;
+        }
+        
+        #discription1 {
+            background-color: rgba(255,255,240,0.6);
+            padding: 1rem;
+            border-radius: 16px;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        #read1 {
+            transition: all 0.2s;
+        }
+        
+        .learn-more-btn {
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>1943 Studio</h1>
+    </header>
+    <div id="aaa">
+        <h1>Games:</h1>
+        <div class="game">
+            <h1>The Phoenician Bird</h1><br><br>
+            <!-- SIMPLE DOWNLOAD BUTTON - only direct download function -->
+            <button class="Downloader" id="downloadBtn">DOWNLOAD</button>
+            <br><br><br><br>
+            <div id="read1">
+                <p>​Experience the intensity of the Lebanese War in a definitive 3D historical journey.
+                    Developed by 1943 Studio, this project takes you through the most pivotal moments of the struggle
+                    for sovereignty, from
+                    the birth of the Republic to the modern era.<br>
+                    ​Engage in a massive variety of missions across diverse environments—from high-stakes urban combat
+                    to
+                    strategic defensive operations. Every chapter demands a new tactic as you navigate the shifting
+                    frontlines of history.<span id="b1" class="b1 learn-more-btn"> learn more...</span><br></p>
+            </div>
+            <div id="discription1"> 
+                <p>​Experience the intensity of the Lebanese War in a definitive 3D historical journey.
+                Developed by 1943 Studio, this project takes you through the most pivotal moments of the struggle for
+                sovereignty, from
+                the birth of the Republic to the modern era.<br>
+                ​Engage in a massive variety of missions across diverse environments—from high-stakes urban combat to
+                strategic defensive operations. Every chapter demands a new tactic as you navigate the shifting
+                frontlines of history.</p>
+                <h3>​CAMPAIGN MISSIONS</h3>
+                <p>​Independence<br>
+                ​Dekweneh<br>
+                ​Downtown<br>
+                ​Damour<br>
+                ​The 100 Days<br>
+                ​Zahle<br>
+                ​The Lebanese War<br>
+                ​Cedar Revolution</p>
+                <h2>​SPECIAL THANKS</h2>
+                <p>
+                ​This project was made possible by the incredible tools and support of the global development
+                community:<br><br>
+                <b>​Godot Engine</b>: For providing the powerful open-source foundation for this 3D world.<br>
+                <b>​Sketchfab</b>: For the high-quality 3D models that brought these historical environments to
+                life.<br>
+                <b>​Pixabay</b>: For the immersive audio and soundscapes.<br>
+                <b>​Family & Friends</b>: To my parents and everyone who supported the vision of 1943 Studio from
+                day
+                one. Your
+                encouragement made this 1.62 GB journey possible.<br>
+                </p>
+                <h2>​DISCLAIMER</h2>
+                <p>​The Phoenician Bird is a work of historical fiction and a digital dramatization. Due to the
+                complexities surrounding the era of the Lebanese War (1975–1990) and the lack of a single official
+                historical record, certain events, timelines, or locations may have been modified for gameplay
+                purposes
+                or narrative clarity. All depictions are intended for educational and entertainment purposes and do
+                not
+                claim absolute historical accuracy.</p>
+                <p style="font-weight: bold; margin-top: 20px;">​RISE FROM THE ASHES. DEFEND THE SOVEREIGNTY.</p>
+                <br><span id="b2" class="b1 learn-more-btn">learn less</span>
+            </div>
+            <div class="image-gallery">
+                <img class="imager" src="Screenshot 2026-03-25 194933.png" alt="Game screenshot 1">
+                <img class="imager" src="Screenshot 2026-03-25 195527.png" alt="Game screenshot 2">
+                <img class="imager1" src="Screenshot 2026-03-25 195630.png" alt="Game screenshot 3">
+                <img class="imager1" src="Screenshot 2026-03-25 195824.png" alt="Game screenshot 4">
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // =====================================================
+        // SIMPLE DOWNLOAD FUNCTION - No tracking, no GitHub, no storage
+        // Only triggers direct file download from provided URL
+        // =====================================================
+        
+        // Direct download function: opens the game file URL in a new tab or triggers download
+        function downloadGameFile() {
+            // The direct game file URL (Google Drive public download link)
+            // Note: For Google Drive, we need to use the direct download format
+            // Converting the provided sharing link to direct download format
+            const fileId = '1f-tqdMQZnpLPy9LaK0Dko_LJTXNP-enC';
+            const directDownloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+            
+            // Method 1: Create an anchor element with download attribute
+            // This attempts to trigger download for compatible file types
+            const link = document.createElement('a');
+            link.href = directDownloadUrl;
+            // Set download attribute to suggest filename (optional)
+            link.download = 'Phoenician_Bird_Game.zip';
+            link.target = '_blank';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Fallback: If the above doesn't work due to browser restrictions,
+            // the user will still be redirected to Google Drive's download page
+            // which is the standard behavior for Drive links
+        }
+        
+        // Attach download function to the button
+        const downloadButton = document.getElementById('downloadBtn');
+        if (downloadButton) {
+            // Remove any existing listeners to ensure clean state
+            downloadButton.removeEventListener('click', downloadGameFile);
+            downloadButton.addEventListener('click', downloadGameFile);
+        }
+        
+        // =====================================================
+        // READ MORE / READ LESS TOGGLE FUNCTIONALITY (UI only, preserved)
+        // No tracking, no analytics - pure UI interaction
+        // =====================================================
+        
+        // Get elements
+        const readMoreBtn = document.getElementById('b1');
+        const readLessBtn = document.getElementById('b2');
+        const shortDesc = document.getElementById('read1');
+        const fullDesc = document.getElementById('discription1');
+        
+        // Toggle to show full description
+        function showFullDescription() {
+            if (shortDesc && fullDesc) {
+                shortDesc.style.display = 'none';
+                fullDesc.style.display = 'block';
+            }
+        }
+        
+        // Toggle to show short description
+        function showShortDescription() {
+            if (shortDesc && fullDesc) {
+                shortDesc.style.display = 'block';
+                fullDesc.style.display = 'none';
+            }
+        }
+        
+        // Attach event listeners with safety checks
+        if (readMoreBtn) {
+            readMoreBtn.removeEventListener('click', showFullDescription);
+            readMoreBtn.addEventListener('click', showFullDescription);
+        }
+        
+        if (readLessBtn) {
+            readLessBtn.removeEventListener('click', showShortDescription);
+            readLessBtn.addEventListener('click', showShortDescription);
+        }
+        
+        // Ensure initial state is correct (short description visible, full hidden)
+        if (shortDesc && fullDesc) {
+            shortDesc.style.display = 'block';
+            fullDesc.style.display = 'none';
+        }
+        
+        // Optional: Console log to confirm script loaded cleanly (no errors)
+        console.log('✅ Page loaded | Download function ready | No tracking active');
+    </script>
+</body>
+
+</html>
