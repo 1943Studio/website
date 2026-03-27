@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <link rel="icon" type="image/x-icon" href="1943Studio.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>1943 Studio - Game Downloader</title>
+    <title>1943 Studio - The Phoenician Bird</title>
     <style>
         * {
             margin: 0;
@@ -14,43 +14,52 @@
         }
 
         body {
-            background-color: rgb(7, 53, 255);
-            font-family: system-ui, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: radial-gradient(circle at 20% 30%, #0a0f2a, #030318);
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
             min-height: 100vh;
-            border: 17px solid rgb(0, 0, 0);
+            border: 17px solid #000000;
+            position: relative;
+        }
 
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" opacity="0.1"><path fill="none" stroke="%23ffcc44" stroke-width="1.5" d="M400 50 L400 750 M50 400 L750 400 M120 120 L680 680 M120 680 L680 120"/><circle cx="400" cy="400" r="100" stroke="%23ffaa33" fill="none" stroke-width="1"/><circle cx="400" cy="400" r="200" stroke="%23ffaa55" fill="none" stroke-width="0.8"/><path d="M400 250 L420 380 L400 360 L380 380 Z" fill="%23ffcc66" opacity="0.4"/></svg>');
+            background-repeat: repeat;
+            pointer-events: none;
+            z-index: 0;
         }
 
         header {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
-            background-color: rgb(76, 0, 255);
+            gap: 24px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
             width: 100%;
             padding: 1.2rem 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-bottom: 3px solid #ffcc44;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,200,0.2);
             flex-wrap: wrap;
-        }
-
-        #oooo {
-            width: 3cm;
-            height: 3cm;
-            object-fit: contain;
-            display: block;
-            border-radius: 12px;
-            background-color: rgba(255, 255, 255, 0.05);
+            position: relative;
+            z-index: 2;
         }
 
         header h1 {
             font-size: 100px;
             text-align: center;
-            color: white;
-            -webkit-text-stroke: 3px black;
-            text-stroke: 3px black;
-            text-shadow: 6px 6px 12px rgba(0, 0, 0, 0.5), 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #FFF8E7, #FFD966, #FFB347, #FFA500);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 15px rgba(255,215,0,0.5);
             letter-spacing: -0.02em;
-            font-weight: 700;
+            font-weight: 800;
             margin: 0;
             line-height: 1.2;
             white-space: nowrap;
@@ -60,11 +69,7 @@
             header h1 {
                 font-size: 12vw;
                 white-space: normal;
-                word-break: keep-all;
-                -webkit-text-stroke: 2.5px black;
-                text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5), 2px 2px 5px rgba(0, 0, 0, 0.3);
             }
-
             header {
                 gap: 16px;
                 padding: 1rem 1.5rem;
@@ -72,208 +77,378 @@
         }
 
         @media (max-width: 650px) {
-            header {
-                gap: 12px;
-                padding: 0.9rem 1.2rem;
-            }
-
-            header h1 {
-                font-size: 11vw;
-                -webkit-text-stroke: 2px black;
-                text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5), 1px 1px 3px rgba(0, 0, 0, 0.3);
-            }
-
-            #oooo {
-                width: 2.8cm;
-                height: 2.8cm;
-            }
-        }
-
-        @media (max-width: 480px) {
-            header {
-                gap: 10px;
-                padding: 0.8rem 1rem;
-            }
-
-            header h1 {
-                font-size: 10vw;
-                white-space: normal;
-                -webkit-text-stroke: 2px black;
-                text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6), 1px 1px 3px rgba(0, 0, 0, 0.4);
-            }
-
-            #oooo {
-                width: 2.6cm;
-                height: 2.6cm;
-            }
-        }
-
-        @media (max-width: 380px) {
-            header h1 {
-                font-size: 9vw;
-                -webkit-text-stroke: 1.8px black;
-                text-shadow: 3px 3px 7px rgba(0, 0, 0, 0.5);
-            }
-
-            #oooo {
-                width: 2.4cm;
-                height: 2.4cm;
-            }
-
-            header {
-                gap: 8px;
-            }
+            header h1 { font-size: 11vw; }
         }
 
         @media (min-width: 1200px) {
-            header h1 {
-                font-size: 100px;
-                white-space: nowrap;
-                -webkit-text-stroke: 3px black;
-                text-shadow: 6px 6px 12px rgba(0, 0, 0, 0.6), 3px 3px 6px rgba(0, 0, 0, 0.4);
-            }
-
-            #oooo {
-                width: 3cm;
-                height: 3cm;
-            }
+            header h1 { font-size: 100px; white-space: nowrap; }
         }
 
         #aaa {
-            border-radius: 16px;
+            border-radius: 32px;
             margin: 2rem;
-            padding: 1rem;
-            background-color: rgb(255, 255, 255);
+            padding: 1.8rem;
+            background: rgba(10, 15, 35, 0.75);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 200, 80, 0.5);
+            box-shadow: 0 25px 45px -12px black;
+            position: relative;
+            z-index: 2;
         }
 
-        #aaa h1 {
-            font-size: 46px;
+        #aaa > h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, #FFE6AA, #FFD966, #FFB347);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            border-left: 6px solid #ffcc44;
+            padding-left: 25px;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        #aaa p {
-            font-size: 1.2rem;
-            font-weight: 500;
+        /* SINGLE FACEBOOK BUTTON SECTION - Clean and minimal */
+        .facebook-link-section {
+            margin: 1.5rem 0 2rem 0;
+            text-align: center;
+        }
+
+        .fb-single-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            background: linear-gradient(105deg, #1877f2, #0e5fd9);
+            padding: 16px 42px;
+            border-radius: 60px;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 200, 0.4);
+            letter-spacing: 0.8px;
+            cursor: pointer;
+        }
+
+        .fb-single-button:hover {
+            transform: scale(1.03);
+            background: linear-gradient(105deg, #2d88ff, #1877f2);
+            box-shadow: 0 18px 32px rgba(24, 119, 242, 0.5);
+            border-color: #ffcc44;
+        }
+
+        .fb-single-button:active {
+            transform: scale(0.98);
+        }
+
+        .fb-icon-large {
+            font-size: 28px;
+            filter: drop-shadow(0 0 3px white);
+        }
+
+        @media (max-width: 650px) {
+            .fb-single-button {
+                padding: 12px 28px;
+                font-size: 1.1rem;
+                gap: 10px;
+            }
+            .fb-icon-large {
+                font-size: 24px;
+            }
         }
 
         .game {
-            border-radius: 24px;
-            background-color: rgb(211, 224, 226);
-            margin: 2rem;
-            padding: 1rem;
+            border-radius: 36px;
+            background: linear-gradient(145deg, rgba(0, 0, 0, 0.65), rgba(20, 15, 40, 0.8));
+            backdrop-filter: blur(4px);
+            margin: 2rem 0;
+            padding: 1.8rem;
+            border: 1px solid rgba(255, 200, 100, 0.6);
+            transition: 0.3s ease;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.6);
+        }
+
+        .game:hover {
+            border-color: #ffcc44;
+            box-shadow: 0 0 25px rgba(255, 200, 70, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .game-title-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .game-logo {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            border-radius: 16px;
+            background: radial-gradient(circle, rgba(255,215,0,0.25), rgba(0,0,0,0.5));
+            box-shadow: 0 0 0 2px #ffcc44, 0 0 0 5px rgba(0,0,0,0.4);
+            transition: transform 0.2s ease;
+        }
+
+        .game-logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 8px gold);
         }
 
         .game h1 {
-            font-size: 26px;
+            font-size: 34px;
+            font-weight: 800;
+            background: linear-gradient(145deg, #FFF5E0, #FFE0A3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
         }
 
-        #discription1 {
-            display: none;
+        .game-tags {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1e1a2f;
+            padding: 6px 20px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            border-left: 4px solid;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            backdrop-filter: blur(2px);
+        }
+
+        .tag.age {
+            border-left-color: #ff4d6d;
+            background: #2a1a25;
+            color: #ffb3c6;
+        }
+
+        .tag.size {
+            border-left-color: #33ffaa;
+            background: #1a2a25;
+            color: #b3ffdd;
         }
 
         .b1 {
-            font-weight: 2;
+            font-weight: 600;
             cursor: pointer;
-            color: #0056b3;
+            color: #ffcc66;
             text-decoration: underline;
-            transition: opacity 0.2s;
+            text-underline-offset: 4px;
+            transition: 0.2s;
+            display: inline-block;
         }
-        
         .b1:hover {
-            opacity: 0.7;
+            color: #ffaa33;
+            text-shadow: 0 0 5px gold;
         }
 
-        .imager {
-            width: 12cm;
-            height: 7cm;
-            border-width: 0.25cm;
-            border-style: solid;
-            border-color: rgb(0, 0, 0);
-            margin: 0cm;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .imager1 {
-            width: 12cm;
-            height: 7cm;
-            border-width: 0.25cm;
-            border-style: solid;
-            border-color: rgb(0, 0, 0);
-            margin: 0cm;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
         .image-gallery {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 1.2rem;
             justify-content: center;
-            margin-top: 1.5rem;
+            margin: 2rem 0 1rem;
         }
 
-        .Downloader {
-            background-color: #00a86b;
-            width: 4.3cm;
-            height: 2cm;
-            transform: skew(-35deg);
-            font-size: x-large;
-            font-weight: 800;
-            border-radius: 45px;
-            border: none;
+        .gallery-img {
+            width: 12cm;
+            height: 7cm;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 3px solid #ffcc44;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
             cursor: pointer;
-            transition: all 0.2s ease;
-            color: white;
-            text-shadow: 1px 1px 0px rgba(0,0,0,0.3);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.25s ease;
+            background: #000;
         }
-        
-        .Downloader:hover {
-            background-color: #008f5c;
-            transform: skew(-35deg) scale(1.02);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+
+        .gallery-img:hover {
+            transform: scale(1.02);
+            border-color: #ffea80;
+            box-shadow: 0 0 18px rgba(255,200,0,0.6);
         }
-        
-        .Downloader:active {
-            transform: skew(-35deg) scale(0.98);
-        }
-        
-        @media (max-width: 600px) {
-            .Downloader {
-                width: 3.8cm;
-                height: 1.8cm;
-                font-size: large;
-                transform: skew(-25deg);
-            }
-            .imager, .imager1 {
+
+        @media (max-width: 800px) {
+            .gallery-img {
                 width: 100%;
                 max-width: 280px;
                 height: auto;
                 aspect-ratio: 12 / 7;
             }
+            .game-logo {
+                width: 55px;
+                height: 55px;
+            }
         }
-        
-        .game-info {
+
+        .Downloader {
+            background: linear-gradient(95deg, #f0b429, #e07c1f);
+            width: 5rem;
+            min-width: 4.6cm;
+            height: 2cm;
+            transform: skew(-12deg);
+            font-size: 1.25rem;
+            font-weight: 800;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #0a0f1a;
+            text-shadow: 0 1px 0 rgba(255,255,200,0.8);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
+            margin: 10px 0;
+        }
+        .Downloader:hover {
+            background: linear-gradient(95deg, #ffc857, #f09819);
+            transform: skew(-12deg) scale(1.02);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.6);
+        }
+        .Downloader:active {
+            transform: skew(-12deg) scale(0.97);
+        }
+
+        #read1 {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem 1.2rem;
+            border-radius: 24px;
+            color: #f0f3ff;
+            line-height: 1.5;
+            border-left: 4px solid #ffcc44;
+        }
+
+        #discription1 {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            padding: 1.5rem;
+            border-radius: 28px;
             margin-top: 1rem;
+            border: 1px solid #ffcc66;
+            color: #fff5e6;
             line-height: 1.5;
         }
-        
-        #discription1 {
-            background-color: rgba(255,255,240,0.6);
-            padding: 1rem;
-            border-radius: 16px;
-            margin-top: 1rem;
-            font-size: 0.95rem;
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.94);
+            backdrop-filter: blur(20px);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .modal img {
+            max-width: 90vw;
+            max-height: 85vh;
+            border-radius: 28px;
+            border: 4px solid #ffcc44;
+            box-shadow: 0 0 55px rgba(0,0,0,0.9), 0 0 20px rgba(255,215,0,0.5);
+            object-fit: contain;
+        }
+        .close-modal {
+            position: absolute;
+            top: 30px;
+            right: 50px;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(0,0,0,0.6);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            font-family: monospace;
+            border: 1px solid gold;
+        }
+        .close-modal:hover {
+            background: #ff4444;
+            transform: scale(1.1);
+            border-color: white;
         }
         
-        #read1 {
-            transition: all 0.2s;
+        .switch-hint {
+            text-align: center;
+            margin: 20px 0 10px;
+            font-size: 0.9rem;
+            color: #ffdd99;
+            background: rgba(0,0,0,0.5);
+            display: inline-block;
+            width: auto;
+            padding: 8px 20px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
         }
         
-        .learn-more-btn {
-            font-weight: 600;
+        .switch-hint span {
+            background: #ffaa33;
+            color: #1e1a2f;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-weight: bold;
+            margin: 0 4px;
+        }
+        
+        .epic-glow {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #ffdd99;
+        }
+        
+        .game-icon-wrapper {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 650px) {
+            .Downloader { width: 3.8cm; height: 1.8cm; font-size: 1rem; transform: skew(-8deg); }
+            .close-modal { width: 45px; height: 45px; font-size: 2rem; top: 20px; right: 20px; }
+            .game-title-area {
+                gap: 12px;
+            }
+            .game-logo {
+                width: 50px;
+                height: 50px;
+            }
+            .game h1 {
+                font-size: 26px;
+            }
         }
     </style>
 </head>
@@ -283,12 +458,30 @@
         <h1>1943 Studio</h1>
     </header>
     <div id="aaa">
-        <h1>Games:</h1>
+        <h1>⚔️ LEGENDARY DOWNLOADS ⚔️</h1>
+        
+        <!-- SINGLE FACEBOOK BUTTON - Visit our Facebook page to see votes and updates -->
+        <div class="facebook-link-section">
+            <a href="https://www.facebook.com/people/1943-Studio/61582173840823/" target="_blank" rel="noopener noreferrer" class="fb-single-button">
+                <span class="fb-icon-large">📘</span>
+                <span>Visit our Facebook page to see votes and updates</span>
+                <span>➡️</span>
+            </a>
+        </div>
+        
         <div class="game">
-            <h1>The Phoenician Bird</h1><br><br>
-            <!-- SIMPLE DOWNLOAD BUTTON - only direct download function -->
-            <button class="Downloader" id="downloadBtn">DOWNLOAD</button>
-            <br><br><br><br>
+            <div class="game-icon-wrapper">
+                <div class="game-title-area">
+                    <img class="game-logo" src="logo.png" alt="The Phoenician Bird Logo" onerror="this.src='https://placehold.co/70x70/2c3e50/ffcc44?text=PHX'">
+                    <h1>THE PHOENICIAN BIRD</h1>
+                </div>
+                <div class="game-tags">
+                    <span class="tag age">🔞 12+</span>
+                    <span class="tag size">💾 1.50 GB</span>
+                </div>
+            </div>
+            <button class="Downloader" id="downloadBtn">⬇ DOWNLOAD</button>
+            <br><br>
             <div id="read1">
                 <p>​Experience the intensity of the Lebanese War in a definitive 3D historical journey.
                     Developed by 1943 Studio, this project takes you through the most pivotal moments of the struggle
@@ -338,101 +531,172 @@
                 not
                 claim absolute historical accuracy.</p>
                 <p style="font-weight: bold; margin-top: 20px;">​RISE FROM THE ASHES. DEFEND THE SOVEREIGNTY.</p>
-                <br><span id="b2" class="b1 learn-more-btn">learn less</span>
+                <br><span id="b2" class="b1 learn-more-btn">⬆ learn less</span>
             </div>
-            <div class="image-gallery">
-                <img class="imager" src="Screenshot 2026-03-25 194933.png" alt="Game screenshot 1">
-                <img class="imager" src="Screenshot 2026-03-25 195527.png" alt="Game screenshot 2">
-                <img class="imager1" src="Screenshot 2026-03-25 195630.png" alt="Game screenshot 3">
-                <img class="imager1" src="Screenshot 2026-03-25 195824.png" alt="Game screenshot 4">
+            
+            <!-- GALLERY SECTION: CLICK TO VIEW FULL IMAGE, DOUBLE CLICK TO SWITCH BETWEEN SCREENSHOTS -->
+            <div class="image-gallery" id="dynamicGallery">
+                <img class="gallery-img" src="Screenshot 2026-03-25 194933.png" alt="Game scene 1">
+                <img class="gallery-img" src="Screenshot 2026-03-25 195527.png" alt="Game scene 2">
+                <img class="gallery-img" src="Screenshot 2026-03-25 195630.png" alt="Game scene 3">
+                <img class="gallery-img" src="Screenshot 2026-03-25 195824.png" alt="Game scene 4">
+            </div>
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 5px;">
+                <div class="switch-hint">
+                    🖱️ <span>CLICK IMAGE</span> → Fullscreen view
+                </div>
+                <div class="switch-hint">
+                    🔄 <span>DOUBLE CLICK</span> → Switch between game screenshots
+                </div>
+            </div>
+            <div class="epic-glow">
+                ✦ THE PHOENICIAN BIRD | EPIC HISTORICAL COMBAT | OFFICIAL LOGO ✦
             </div>
         </div>
     </div>
     
+    <!-- MODAL FOR FULL IMAGE VIEW -->
+    <div id="imageModal" class="modal">
+        <span class="close-modal">&times;</span>
+        <img id="modalFullImage" src="" alt="Full size view">
+    </div>
+
     <script>
-        // =====================================================
-        // SIMPLE DOWNLOAD FUNCTION - No tracking, no GitHub, no storage
-        // Only triggers direct file download from provided URL
-        // =====================================================
-        
-        // Direct download function: opens the game file URL in a new tab or triggers download
-        function downloadGameFile() {
-            // The direct game file URL (Google Drive public download link)
-            // Note: For Google Drive, we need to use the direct download format
-            // Converting the provided sharing link to direct download format
-            const fileId = '1f-tqdMQZnpLPy9LaK0Dko_LJTXNP-enC';
-            const directDownloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
-            
-            // Method 1: Create an anchor element with download attribute
-            // This attempts to trigger download for compatible file types
-            const link = document.createElement('a');
-            link.href = directDownloadUrl;
-            // Set download attribute to suggest filename (optional)
-            link.download = 'Phoenician_Bird_Game.zip';
-            link.target = '_blank';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Fallback: If the above doesn't work due to browser restrictions,
-            // the user will still be redirected to Google Drive's download page
-            // which is the standard behavior for Drive links
-        }
-        
-        // Attach download function to the button
-        const downloadButton = document.getElementById('downloadBtn');
-        if (downloadButton) {
-            // Remove any existing listeners to ensure clean state
-            downloadButton.removeEventListener('click', downloadGameFile);
-            downloadButton.addEventListener('click', downloadGameFile);
-        }
-        
-        // =====================================================
-        // READ MORE / READ LESS TOGGLE FUNCTIONALITY (UI only, preserved)
-        // No tracking, no analytics - pure UI interaction
-        // =====================================================
-        
-        // Get elements
-        const readMoreBtn = document.getElementById('b1');
-        const readLessBtn = document.getElementById('b2');
-        const shortDesc = document.getElementById('read1');
-        const fullDesc = document.getElementById('discription1');
-        
-        // Toggle to show full description
-        function showFullDescription() {
-            if (shortDesc && fullDesc) {
-                shortDesc.style.display = 'none';
-                fullDesc.style.display = 'block';
+        (function() {
+            // DOWNLOAD FUNCTION (original Google Drive)
+            function downloadGameFile() {
+                const fileId = '1f-tqdMQZnpLPy9LaK0Dko_LJTXNP-enC';
+                const directDownloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+                const link = document.createElement('a');
+                link.href = directDownloadUrl;
+                link.download = 'Phoenician_Bird_Game.zip';
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
-        }
-        
-        // Toggle to show short description
-        function showShortDescription() {
-            if (shortDesc && fullDesc) {
+            const downloadBtn = document.getElementById('downloadBtn');
+            if(downloadBtn) {
+                downloadBtn.removeEventListener('click', downloadGameFile);
+                downloadBtn.addEventListener('click', downloadGameFile);
+            }
+            
+            // READ MORE / LESS
+            const readMore = document.getElementById('b1');
+            const readLess = document.getElementById('b2');
+            const shortDesc = document.getElementById('read1');
+            const fullDesc = document.getElementById('discription1');
+            
+            function expandDesc() {
+                if(shortDesc && fullDesc) {
+                    shortDesc.style.display = 'none';
+                    fullDesc.style.display = 'block';
+                }
+            }
+            function collapseDesc() {
+                if(shortDesc && fullDesc) {
+                    shortDesc.style.display = 'block';
+                    fullDesc.style.display = 'none';
+                }
+            }
+            if(readMore) {
+                readMore.removeEventListener('click', expandDesc);
+                readMore.addEventListener('click', expandDesc);
+            }
+            if(readLess) {
+                readLess.removeEventListener('click', collapseDesc);
+                readLess.addEventListener('click', collapseDesc);
+            }
+            if(shortDesc && fullDesc) {
                 shortDesc.style.display = 'block';
                 fullDesc.style.display = 'none';
             }
-        }
-        
-        // Attach event listeners with safety checks
-        if (readMoreBtn) {
-            readMoreBtn.removeEventListener('click', showFullDescription);
-            readMoreBtn.addEventListener('click', showFullDescription);
-        }
-        
-        if (readLessBtn) {
-            readLessBtn.removeEventListener('click', showShortDescription);
-            readLessBtn.addEventListener('click', showShortDescription);
-        }
-        
-        // Ensure initial state is correct (short description visible, full hidden)
-        if (shortDesc && fullDesc) {
-            shortDesc.style.display = 'block';
-            fullDesc.style.display = 'none';
-        }
-        
-        // Optional: Console log to confirm script loaded cleanly (no errors)
-        console.log('✅ Page loaded | Download function ready | No tracking active');
+            
+            // MODAL LOGIC
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalFullImage');
+            const closeModalBtn = document.querySelector('.close-modal');
+            
+            function openModal(imgSrc) {
+                modal.style.display = 'flex';
+                modalImg.src = imgSrc;
+            }
+            function closeModal() {
+                modal.style.display = 'none';
+                modalImg.src = '';
+            }
+            
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if(e.target === modal) closeModal();
+            });
+            document.addEventListener('keydown', (e) => {
+                if(e.key === 'Escape' && modal.style.display === 'flex') closeModal();
+            });
+            
+            // IMAGE SWITCHING + CLICK FULL VIEW
+            const gameImageSources = [
+                "Screenshot 2026-03-25 194933.png",
+                "Screenshot 2026-03-25 195527.png",
+                "Screenshot 2026-03-25 195630.png",
+                "Screenshot 2026-03-25 195824.png"
+            ];
+            
+            function cycleImage(imgElement) {
+                let currentSrc = imgElement.src;
+                let currentIndex = -1;
+                for(let i = 0; i < gameImageSources.length; i++) {
+                    if(currentSrc.includes(gameImageSources[i]) || currentSrc.endsWith(gameImageSources[i])) {
+                        currentIndex = i;
+                        break;
+                    }
+                }
+                if(currentIndex === -1) {
+                    for(let i = 0; i < gameImageSources.length; i++) {
+                        if(currentSrc.indexOf(gameImageSources[i]) !== -1) {
+                            currentIndex = i;
+                            break;
+                        }
+                    }
+                }
+                let nextIndex = (currentIndex + 1) % gameImageSources.length;
+                if(nextIndex < 0) nextIndex = 0;
+                imgElement.src = gameImageSources[nextIndex];
+            }
+            
+            function attachImageBehaviors(imgElement) {
+                let clickTimer = null;
+                const handler = (e) => {
+                    e.stopPropagation();
+                    if(clickTimer) {
+                        clearTimeout(clickTimer);
+                        clickTimer = null;
+                        cycleImage(imgElement);
+                    } else {
+                        clickTimer = setTimeout(() => {
+                            openModal(imgElement.src);
+                            clickTimer = null;
+                        }, 180);
+                    }
+                };
+                imgElement.removeEventListener('click', handler);
+                imgElement.addEventListener('click', handler);
+            }
+            
+            const allGalleryImgs = document.querySelectorAll('.gallery-img');
+            allGalleryImgs.forEach(img => attachImageBehaviors(img));
+            
+            // Logo fallback
+            const gameLogo = document.querySelector('.game-logo');
+            if(gameLogo) {
+                gameLogo.onerror = function() {
+                    this.src = 'https://placehold.co/70x70/2c3e50/ffcc44?text=PHOENIX';
+                    this.alt = 'Phoenician Bird Logo';
+                };
+            }
+            
+            console.log("🔥 1943 Studio | The Phoenician Bird | Facebook button ready - visit page for votes & updates");
+        })();
     </script>
 </body>
 
