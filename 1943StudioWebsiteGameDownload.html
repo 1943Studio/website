@@ -13,25 +13,7 @@
         import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
         
         // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDG6d46eLliby-nkXOop9VrCXNALiiDcoo",
-            authDomain: "website-1943studio.firebaseapp.com",
-            projectId: "website-1943studio",
-            storageBucket: "website-1943studio.firebasestorage.app",
-            messagingSenderId: "189489534704",
-            appId: "1:189489534704:web:4d79f976db6dcd9e6c9435",
-            measurementId: "G-PND6G1R1LB"
-        };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        
-        // Reference to the game download counter document (singleton)
-        const counterDocRef = doc(db, "downloadStats", "phoenicianBird");
-        
-        // Reference to collection for detailed download logs (each download event)
-        const downloadLogsRef = collection(db, "downloadEvents");
         
         // Global variable to store current count
         window.downloadCount = 0;
