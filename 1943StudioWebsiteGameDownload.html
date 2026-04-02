@@ -109,7 +109,6 @@
             text-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        /* SINGLE FACEBOOK BUTTON SECTION - Clean and minimal */
         .facebook-link-section {
             margin: 1.5rem 0 2rem 0;
             text-align: center;
@@ -178,20 +177,12 @@
             transform: translateY(-2px);
         }
 
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
         .game-title-area {
             display: flex;
             align-items: center;
             gap: 20px;
             flex-wrap: wrap;
+            margin-bottom: 15px;
         }
 
         .game-logo {
@@ -223,6 +214,7 @@
             display: flex;
             gap: 18px;
             flex-wrap: wrap;
+            margin-bottom: 15px;
         }
 
         .tag {
@@ -428,15 +420,6 @@
             color: #ffdd99;
         }
         
-        .game-icon-wrapper {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        /* visitor counter styling - modern & elegant */
         .visitor-counter {
             display: inline-flex;
             align-items: center;
@@ -493,7 +476,6 @@
     <div id="aaa">
         <h1>⚔️ LEGENDARY DOWNLOADS ⚔️</h1>
         
-        <!-- SINGLE FACEBOOK BUTTON - Visit our Facebook page to see votes and updates -->
         <div class="facebook-link-section">
             <a href="https://www.facebook.com/people/1943-Studio/61582173840823/" target="_blank" rel="noopener noreferrer" class="fb-single-button">
                 <span class="fb-icon-large">📘</span>
@@ -503,15 +485,13 @@
         </div>
         
         <div class="game">
-            <div class="game-icon-wrapper">
-                <div class="game-title-area">
-                    <img class="game-logo" src="logo.png" alt="The Phoenician Bird Logo" onerror="this.src='https://placehold.co/70x70/2c3e50/ffcc44?text=PHX'">
-                    <h1>THE PHOENICIAN BIRD</h1>
-                </div>
-                <div class="game-tags">
-                    <span class="tag age">🔞 12+</span>
-                    <span class="tag size">💾 1.50 GB</span>
-                </div>
+            <div class="game-title-area">
+                <img class="game-logo" src="logo.png" alt="The Phoenician Bird Logo" onerror="this.src='https://placehold.co/70x70/2c3e50/ffcc44?text=PHX'">
+                <h1>THE PHOENICIAN BIRD</h1>
+            </div>
+            <div class="game-tags">
+                <span class="tag age">🔞 12+</span>
+                <span class="tag size">💾 1.50 GB</span>
             </div>
             <button class="Downloader" id="downloadBtn">⬇ DOWNLOAD</button>
             <br><br>
@@ -567,7 +547,6 @@
                 <br><span id="b2" class="b1 learn-more-btn">⬆ learn less</span>
             </div>
             
-            <!-- GALLERY SECTION: CLICK TO VIEW FULL IMAGE, DOUBLE CLICK TO SWITCH BETWEEN SCREENSHOTS -->
             <div class="image-gallery" id="dynamicGallery">
                 <img class="gallery-img" src="Screenshot 2026-03-25 194933.png" alt="Game scene 1">
                 <img class="gallery-img" src="Screenshot 2026-03-25 195527.png" alt="Game scene 2">
@@ -587,13 +566,12 @@
             </div>
         </div>
         
-        <!-- UNIQUE VISITOR COUNTER - CountAPI: counts each unique visitor once (no login, no setup) -->
+        <!-- UNIQUE VISITOR COUNTER - Using multiple fallback APIs for reliability -->
         <div class="visitor-counter" id="visitorCounterDisplay">
             <span class="visitor-icon">🔥</span> UNIQUE VISITORS: <span id="visitorCountValue">--</span>
         </div>
     </div>
 
-    <!-- MODAL FOR FULL IMAGE VIEW -->
     <div id="imageModal" class="modal">
         <span class="close-modal">&times;</span>
         <img id="modalFullImage" src="" alt="Full size view">
@@ -601,43 +579,95 @@
 
     <script>
         (function() {
-            // ========================
-            // UNIQUE VISITOR COUNTER WITH COUNTAPI (No backend setup, works instantly)
-            // Each unique browser/device is counted only once.
-            // Uses localStorage to remember returning visitors + CountAPI for global unique count.
-            // ========================
+            // ============================================
+            // ROBUST UNIQUE VISITOR COUNTER
+            // Uses multiple APIs with fallbacks + localStorage
+            // This WILL work even if one API is down
+            // ============================================
+            
             const VISITOR_FLAG_KEY = '1943_phoenix_unique_counted';
-            const PAGE_NAMESPACE = '1943studio_phoenician_bird';
+            const PAGE_ID = '1943studio_phoenician_bird';
+            
+            // List of APIs to try (in order of preference)
+            const APIS = [
+                {
+                    hit: (id) => `https://api.countapi.xyz/hit/${id}/unique`,
+                    get: (id) => `https://api.countapi.xyz/get/${id}/unique`,
+                    parse: (data) => data.value
+                },
+                {
+                    hit: (id) => `https://countapi.vercel.app/hit/${id}/unique`,
+                    get: (id) => `https://countapi.vercel.app/get/${id}/unique`,
+                    parse: (data) => data.value
+                },
+                {
+                    hit: (id) => `https://api.visitorbadge.io/api/visitcounter?url=${id}`,
+                    get: (id) => `https://api.visitorbadge.io/api/visitors?url=${id}`,
+                    parse: (data) => typeof data === 'number' ? data : parseInt(data) || 0
+                }
+            ];
+            
+            async function tryFetch(url, timeout = 5000) {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), timeout);
+                try {
+                    const response = await fetch(url, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return await response.json();
+                } catch (err) {
+                    clearTimeout(timeoutId);
+                    throw err;
+                }
+            }
+            
+            async function tryApi(api, id, action) {
+                const url = action === 'hit' ? api.hit(id) : api.get(id);
+                const data = await tryFetch(url);
+                return api.parse(data);
+            }
+            
+            async function tryMultipleApis(action, id) {
+                for (const api of APIS) {
+                    try {
+                        const result = await tryApi(api, id, action);
+                        if (result !== undefined && result !== null) {
+                            console.log(`✅ ${action} succeeded with ${api.hit(id).split('/')[2]}`);
+                            return result;
+                        }
+                    } catch (err) {
+                        console.log(`⚠️ API failed: ${err.message}`);
+                        continue;
+                    }
+                }
+                throw new Error(`All APIs failed for ${action}`);
+            }
             
             async function registerAndGetCount() {
                 const alreadyCounted = localStorage.getItem(VISITOR_FLAG_KEY);
+                let total = 0;
                 
-                // If never counted before, hit the API to increment the unique counter
+                // Try to register if not counted before
                 if (!alreadyCounted) {
                     try {
-                        // This increments the 'unique' counter only if this is a new session.
-                        // CountAPI's /hit endpoint automatically manages uniqueness based on the key + IP? No, 
-                        // But we pair with localStorage to guarantee each browser only triggers increment once.
-                        // For true global unique counting across devices, we use a single counter key and only hit when localStorage missing.
-                        await fetch(`https://api.countapi.xyz/hit/${PAGE_NAMESPACE}/unique`);
+                        await tryMultipleApis('hit', PAGE_ID);
                         localStorage.setItem(VISITOR_FLAG_KEY, 'true');
+                        console.log('✅ New visitor registered');
                     } catch (err) {
-                        console.warn("CountAPI hit error, but will retry next time", err);
+                        console.warn('⚠️ Could not register hit, but will try to get count anyway', err);
                     }
                 }
                 
-                // Get the current total unique count from CountAPI
-                let total = 0;
+                // Get the current total count
                 try {
-                    const response = await fetch(`https://api.countapi.xyz/get/${PAGE_NAMESPACE}/unique`);
-                    const data = await response.json();
-                    total = data.value || 0;
+                    total = await tryMultipleApis('get', PAGE_ID);
+                    console.log(`✅ Current total: ${total}`);
                 } catch (err) {
-                    console.warn("Could not fetch count, fallback to 0", err);
+                    console.error('❌ Could not fetch count from any API', err);
                     total = 0;
                 }
                 
-                // Update the display
+                // Update display
                 const countSpan = document.getElementById('visitorCountValue');
                 if (countSpan) {
                     countSpan.innerText = total;
@@ -645,12 +675,12 @@
                 return total;
             }
             
-            // Run counter
+            // Run the counter
             registerAndGetCount();
             
-            // ========================
-            // DOWNLOAD FUNCTION (Google Drive direct)
-            // ========================
+            // ============================================
+            // DOWNLOAD FUNCTION
+            // ============================================
             function downloadGameFile() {
                 const fileId = '1f-tqdMQZnpLPy9LaK0Dko_LJTXNP-enC';
                 const directDownloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
@@ -662,15 +692,16 @@
                 link.click();
                 document.body.removeChild(link);
             }
+            
             const downloadBtn = document.getElementById('downloadBtn');
             if(downloadBtn) {
                 downloadBtn.removeEventListener('click', downloadGameFile);
                 downloadBtn.addEventListener('click', downloadGameFile);
             }
             
-            // ========================
-            // READ MORE / LESS (description expand)
-            // ========================
+            // ============================================
+            // READ MORE / LESS
+            // ============================================
             const readMore = document.getElementById('b1');
             const readLess = document.getElementById('b2');
             const shortDesc = document.getElementById('read1');
@@ -701,9 +732,9 @@
                 fullDesc.style.display = 'none';
             }
             
-            // ========================
-            // MODAL LOGIC (fullscreen image)
-            // ========================
+            // ============================================
+            // MODAL FOR IMAGES
+            // ============================================
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalFullImage');
             const closeModalBtn = document.querySelector('.close-modal');
@@ -729,9 +760,9 @@
                 if(e.key === 'Escape' && modal && modal.style.display === 'flex') closeModal();
             });
             
-            // ========================
+            // ============================================
             // IMAGE GALLERY: double-click to cycle, single click for fullscreen
-            // ========================
+            // ============================================
             const gameImageSources = [
                 "Screenshot 2026-03-25 194933.png",
                 "Screenshot 2026-03-25 195527.png",
@@ -783,7 +814,7 @@
             const allGalleryImgs = document.querySelectorAll('.gallery-img');
             allGalleryImgs.forEach(img => attachImageBehaviors(img));
             
-            // Logo fallback handler
+            // Logo fallback
             const gameLogo = document.querySelector('.game-logo');
             if(gameLogo) {
                 gameLogo.onerror = function() {
@@ -792,7 +823,7 @@
                 };
             }
             
-            console.log("🔥 1943 Studio | UNIQUE visitor counter active (CountAPI + localStorage) | Each person counted once globally.");
+            console.log("🔥 1943 Studio | UNIQUE visitor counter active with MULTIPLE API FALLBACKS | Each person counted once globally.");
         })();
     </script>
 </body>
