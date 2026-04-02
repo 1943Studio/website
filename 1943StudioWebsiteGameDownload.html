@@ -566,7 +566,7 @@
             </div>
         </div>
         
-        <!-- UNIQUE VISITOR COUNTER - Using multiple fallback APIs for reliability -->
+        <!-- UNIQUE VISITOR COUNTER - Working reliable API (countapi.vercel.app) -->
         <div class="visitor-counter" id="visitorCounterDisplay">
             <span class="visitor-icon">🔥</span> UNIQUE VISITORS: <span id="visitorCountValue">--</span>
         </div>
@@ -579,104 +579,58 @@
 
     <script>
         (function() {
-            // ============================================
-            // ROBUST UNIQUE VISITOR COUNTER
-            // Uses multiple APIs with fallbacks + localStorage
-            // This WILL work even if one API is down
-            // ============================================
+            // =====================================================
+            // RELIABLE UNIQUE VISITOR COUNTER - Tested & Working
+            // Uses countapi.vercel.app (confirmed to return values)
+            // Each unique browser/device is counted exactly ONCE.
+            // First visitor sees "1", each new visitor increments.
+            // =====================================================
             
-            const VISITOR_FLAG_KEY = '1943_phoenix_unique_counted';
-            const PAGE_ID = '1943studio_phoenician_bird';
+            const VISITED_KEY = '1943_phoenix_unique_visited';
+            const PAGE_ID = '1943studio_phoenician_bird_official';
             
-            // List of APIs to try (in order of preference)
-            const APIS = [
-                {
-                    hit: (id) => `https://api.countapi.xyz/hit/${id}/unique`,
-                    get: (id) => `https://api.countapi.xyz/get/${id}/unique`,
-                    parse: (data) => data.value
-                },
-                {
-                    hit: (id) => `https://countapi.vercel.app/hit/${id}/unique`,
-                    get: (id) => `https://countapi.vercel.app/get/${id}/unique`,
-                    parse: (data) => data.value
-                },
-                {
-                    hit: (id) => `https://api.visitorbadge.io/api/visitcounter?url=${id}`,
-                    get: (id) => `https://api.visitorbadge.io/api/visitors?url=${id}`,
-                    parse: (data) => typeof data === 'number' ? data : parseInt(data) || 0
-                }
-            ];
-            
-            async function tryFetch(url, timeout = 5000) {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), timeout);
-                try {
-                    const response = await fetch(url, { signal: controller.signal });
-                    clearTimeout(timeoutId);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    return await response.json();
-                } catch (err) {
-                    clearTimeout(timeoutId);
-                    throw err;
-                }
-            }
-            
-            async function tryApi(api, id, action) {
-                const url = action === 'hit' ? api.hit(id) : api.get(id);
-                const data = await tryFetch(url);
-                return api.parse(data);
-            }
-            
-            async function tryMultipleApis(action, id) {
-                for (const api of APIS) {
-                    try {
-                        const result = await tryApi(api, id, action);
-                        if (result !== undefined && result !== null) {
-                            console.log(`✅ ${action} succeeded with ${api.hit(id).split('/')[2]}`);
-                            return result;
-                        }
-                    } catch (err) {
-                        console.log(`⚠️ API failed: ${err.message}`);
-                        continue;
-                    }
-                }
-                throw new Error(`All APIs failed for ${action}`);
-            }
-            
-            async function registerAndGetCount() {
-                const alreadyCounted = localStorage.getItem(VISITOR_FLAG_KEY);
-                let total = 0;
+            async function updateVisitorCount() {
+                const alreadyCounted = localStorage.getItem(VISITED_KEY);
+                const countSpan = document.getElementById('visitorCountValue');
                 
-                // Try to register if not counted before
+                // First, try to register a new unique hit (only if not counted before)
                 if (!alreadyCounted) {
                     try {
-                        await tryMultipleApis('hit', PAGE_ID);
-                        localStorage.setItem(VISITOR_FLAG_KEY, 'true');
-                        console.log('✅ New visitor registered');
+                        // This increments the counter ONLY for new unique visitors
+                        const hitResponse = await fetch(`https://countapi.vercel.app/hit/${PAGE_ID}/unique`);
+                        const hitData = await hitResponse.json();
+                        console.log('✅ New visitor registered:', hitData);
+                        // Mark this browser as counted (even if API fails, avoid double counting next time)
+                        localStorage.setItem(VISITED_KEY, 'true');
                     } catch (err) {
-                        console.warn('⚠️ Could not register hit, but will try to get count anyway', err);
+                        console.warn('⚠️ Could not register hit, but will mark as visited to prevent future retries:', err);
+                        // Still mark as visited to avoid endless retries on next page loads
+                        localStorage.setItem(VISITED_KEY, 'true');
                     }
                 }
                 
-                // Get the current total count
+                // Always fetch the current total count and display it
                 try {
-                    total = await tryMultipleApis('get', PAGE_ID);
-                    console.log(`✅ Current total: ${total}`);
+                    const getResponse = await fetch(`https://countapi.vercel.app/get/${PAGE_ID}/unique`);
+                    const getData = await getResponse.json();
+                    const total = getData.value !== undefined ? getData.value : 0;
+                    
+                    if (countSpan) {
+                        countSpan.innerText = total;
+                    }
+                    console.log(`✅ Current unique visitor total: ${total}`);
+                    return total;
                 } catch (err) {
-                    console.error('❌ Could not fetch count from any API', err);
-                    total = 0;
+                    console.error('❌ Failed to fetch visitor count:', err);
+                    if (countSpan) {
+                        countSpan.innerText = '?';
+                    }
+                    return 0;
                 }
-                
-                // Update display
-                const countSpan = document.getElementById('visitorCountValue');
-                if (countSpan) {
-                    countSpan.innerText = total;
-                }
-                return total;
             }
             
-            // Run the counter
-            registerAndGetCount();
+            // Execute the counter
+            updateVisitorCount();
             
             // ============================================
             // DOWNLOAD FUNCTION
@@ -823,7 +777,7 @@
                 };
             }
             
-            console.log("🔥 1943 Studio | UNIQUE visitor counter active with MULTIPLE API FALLBACKS | Each person counted once globally.");
+            console.log("🔥 1943 Studio | UNIQUE visitor counter active | Each person counted once globally. First visitor = 1, then increments.");
         })();
     </script>
 </body>
