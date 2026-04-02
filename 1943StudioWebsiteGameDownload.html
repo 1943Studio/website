@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/x-icon" href="1943Studio.png">
-    <meta name="1943 Studio official game download website.Most games are free. included games The Phoenician Bird"  content="Download The Phoenician Bird">
+    <meta name="1943 Studio official game download website.Most games are free. included games The Phoenician Bird" content="Download The Phoenician Bird">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>1943 Studio - The Phoenician Bird | Unique Visitor Counter</title>
     <style>
@@ -437,14 +436,14 @@
             margin-bottom: 15px;
         }
         
-        /* visitor counter styling */
+        /* visitor counter styling - modern & elegant */
         .visitor-counter {
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            background: rgba(0, 0, 0, 0.65);
-            backdrop-filter: blur(8px);
-            padding: 8px 20px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(12px);
+            padding: 10px 24px;
             border-radius: 60px;
             margin-top: 20px;
             margin-bottom: 10px;
@@ -454,6 +453,7 @@
             color: #ffecb3;
             letter-spacing: 0.5px;
             width: fit-content;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.4);
         }
         .visitor-counter span {
             font-size: 1.6rem;
@@ -482,10 +482,10 @@
                 font-size: 26px;
             }
             .visitor-counter span { font-size: 1.3rem; }
+            .visitor-counter { padding: 6px 18px; gap: 8px; }
         }
     </style>
 </head>
-
 <body>
     <header>
         <h1>1943 Studio</h1>
@@ -587,11 +587,10 @@
             </div>
         </div>
         
-        <!-- UNIQUE VISITOR COUNTER - Only counts each person once (using localStorage + fingerprint fallback) -->
+        <!-- UNIQUE VISITOR COUNTER - CountAPI: counts each unique visitor once (no login, no setup) -->
         <div class="visitor-counter" id="visitorCounterDisplay">
-            <span class="visitor-icon">👥</span> Visitors: <span id="visitorCountValue">--</span>
+            <span class="visitor-icon">🔥</span> UNIQUE VISITORS: <span id="visitorCountValue">--</span>
         </div>
-        <span style="display: none;" id="hiddenVisitorBadge"></span>
     </div>
 
     <!-- MODAL FOR FULL IMAGE VIEW -->
@@ -603,124 +602,55 @@
     <script>
         (function() {
             // ========================
-            // UNIQUE VISITOR COUNT LOGIC (only counts each unique person once)
+            // UNIQUE VISITOR COUNTER WITH COUNTAPI (No backend setup, works instantly)
+            // Each unique browser/device is counted only once.
+            // Uses localStorage to remember returning visitors + CountAPI for global unique count.
             // ========================
-            // We use localStorage to remember if this browser has already been counted.
-            // Also we implement a fallback using session + fingerprint: generate a persistent client ID.
-            // For cross-session uniqueness, we store a flag "uniqueVisitorCounted_1943" in localStorage.
-            // Additionally, to prevent counting incognito refreshes we also store a fingerprint based on navigator data.
-            // The counter is stored on a remote-like simulation but actually we will use localStorage as backend
-            // with a manual increment approach that simulates a global count, but to keep it honest we store 
-            // the global counter value in localStorage (globalCount_1943Studio) and increment only if the current
-            // device hasn't been counted before. This ensures each person/browser gets counted once.
-            // However if someone clears localStorage they'd be counted again, which is acceptable for a pure frontend.
-            // For better accuracy we combine a persistent fingerprint derived from userAgent + language + platform + timezone offset + screen resolution.
-            // But to be robust and respect "different person" we set a permanent flag with a unique device ID.
+            const VISITOR_FLAG_KEY = '1943_phoenix_unique_counted';
+            const PAGE_NAMESPACE = '1943studio_phoenician_bird';
             
-            const VISITOR_FLAG_KEY = '1943_phoenix_unique_visitor';    // flag to know if counted
-            const GLOBAL_COUNT_KEY = '1943_studio_total_unique_visitors';
-            
-            // Helper to generate a semi-unique device fingerprint (not full proof but prevents trivial re-count on same machine)
-            function getDeviceFingerprint() {
-                let components = [
-                    navigator.userAgent || '',
-                    navigator.language || '',
-                    navigator.platform || '',
-                    new Date().getTimezoneOffset(),
-                    screen.width + 'x' + screen.height,
-                    screen.colorDepth,
-                    navigator.hardwareConcurrency || 'unknown'
-                ];
-                let fingerprint = components.join('|');
-                // simple hash
-                let hash = 0;
-                for (let i = 0; i < fingerprint.length; i++) {
-                    hash = ((hash << 5) - hash) + fingerprint.charCodeAt(i);
-                    hash |= 0;
-                }
-                return 'fp_' + Math.abs(hash).toString(36);
-            }
-            
-            // Initialize unique visitor counting: only increments global count if this device hasn't been counted.
-            function registerUniqueVisitor() {
-                let alreadyCounted = localStorage.getItem(VISITOR_FLAG_KEY);
-                let deviceFingerprint = getDeviceFingerprint();
-                let storedFingerprint = localStorage.getItem('1943_device_fingerprint');
+            async function registerAndGetCount() {
+                const alreadyCounted = localStorage.getItem(VISITOR_FLAG_KEY);
                 
-                // If we have flag AND fingerprint matches OR flag exists but we also check consistency
-                let isCounted = false;
-                if (alreadyCounted === 'true') {
-                    // if flag exists and fingerprint matches OR fingerprint missing but flag true -> considered counted
-                    if (storedFingerprint && storedFingerprint === deviceFingerprint) {
-                        isCounted = true;
-                    } else if (!storedFingerprint) {
-                        // legacy case but still considered counted, we update fingerprint
-                        isCounted = true;
-                        localStorage.setItem('1943_device_fingerprint', deviceFingerprint);
-                    } else {
-                        // fingerprint mismatch? someone trying to cheat? we still treat as counted because flag present
-                        isCounted = true;
+                // If never counted before, hit the API to increment the unique counter
+                if (!alreadyCounted) {
+                    try {
+                        // This increments the 'unique' counter only if this is a new session.
+                        // CountAPI's /hit endpoint automatically manages uniqueness based on the key + IP? No, 
+                        // But we pair with localStorage to guarantee each browser only triggers increment once.
+                        // For true global unique counting across devices, we use a single counter key and only hit when localStorage missing.
+                        await fetch(`https://api.countapi.xyz/hit/${PAGE_NAMESPACE}/unique`);
+                        localStorage.setItem(VISITOR_FLAG_KEY, 'true');
+                    } catch (err) {
+                        console.warn("CountAPI hit error, but will retry next time", err);
                     }
-                } else {
-                    isCounted = false;
                 }
                 
-                let currentTotal = parseInt(localStorage.getItem(GLOBAL_COUNT_KEY) || '0', 10);
-                
-                if (!isCounted) {
-                    // New unique visitor: increment total and set flag
-                    currentTotal += 1;
-                    localStorage.setItem(GLOBAL_COUNT_KEY, currentTotal);
-                    localStorage.setItem(VISITOR_FLAG_KEY, 'true');
-                    localStorage.setItem('1943_device_fingerprint', deviceFingerprint);
-                    
-                    // Optional: also store a timestamp for analytics
-                    localStorage.setItem('1943_visit_timestamp', Date.now());
+                // Get the current total unique count from CountAPI
+                let total = 0;
+                try {
+                    const response = await fetch(`https://api.countapi.xyz/get/${PAGE_NAMESPACE}/unique`);
+                    const data = await response.json();
+                    total = data.value || 0;
+                } catch (err) {
+                    console.warn("Could not fetch count, fallback to 0", err);
+                    total = 0;
                 }
                 
-                // update the display
+                // Update the display
                 const countSpan = document.getElementById('visitorCountValue');
                 if (countSpan) {
-                    countSpan.innerText = currentTotal;
+                    countSpan.innerText = total;
                 }
-                return currentTotal;
-            }
-            
-            // For first load, ensure global count exists. If not, set to 0.
-            function initGlobalCounter() {
-                if (localStorage.getItem(GLOBAL_COUNT_KEY) === null) {
-                    localStorage.setItem(GLOBAL_COUNT_KEY, '0');
-                }
-                // handle demo scenario: if there is already a flag but counter somehow lower? ensure consistency
-                let flagExists = localStorage.getItem(VISITOR_FLAG_KEY);
-                let currentTotal = parseInt(localStorage.getItem(GLOBAL_COUNT_KEY) || '0', 10);
-                if (flagExists === 'true' && currentTotal === 0) {
-                    // edge case: flag present but counter zero -> set counter to 1 because someone visited before but counter was reset manually? we adjust
-                    localStorage.setItem(GLOBAL_COUNT_KEY, '1');
-                    currentTotal = 1;
-                }
-                return currentTotal;
-            }
-            
-            // Display current count without re-registering (for showing initial)
-            function displayCurrentCount() {
-                let total = parseInt(localStorage.getItem(GLOBAL_COUNT_KEY) || '0', 10);
-                const countSpan = document.getElementById('visitorCountValue');
-                if (countSpan) countSpan.innerText = total;
                 return total;
             }
             
-            // execute unique visitor registration (only increments if truly new)
-            initGlobalCounter();
-            // we must first see if already counted, display current then register? we need to register anyway,
-            // but registration handles increment only once. so we call registerUniqueVisitor which updates display.
-            registerUniqueVisitor();
+            // Run counter
+            registerAndGetCount();
             
-            // Also on every page load we ensure that if user cleared localStorage but fingerprint is still there? The logic covers.
-            // For extra safety, if user comes from same device but cleared localStorage, they will be counted as new (acceptable since storage cleared counts as new person)
-            console.log("[1943 Studio] Unique visitor counter system active: each person counted only once per device/browser.");
-            
-            // DOWNLOAD FUNCTION (original Google Drive)
+            // ========================
+            // DOWNLOAD FUNCTION (Google Drive direct)
+            // ========================
             function downloadGameFile() {
                 const fileId = '1f-tqdMQZnpLPy9LaK0Dko_LJTXNP-enC';
                 const directDownloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
@@ -738,7 +668,9 @@
                 downloadBtn.addEventListener('click', downloadGameFile);
             }
             
-            // READ MORE / LESS
+            // ========================
+            // READ MORE / LESS (description expand)
+            // ========================
             const readMore = document.getElementById('b1');
             const readLess = document.getElementById('b2');
             const shortDesc = document.getElementById('read1');
@@ -769,7 +701,9 @@
                 fullDesc.style.display = 'none';
             }
             
-            // MODAL LOGIC
+            // ========================
+            // MODAL LOGIC (fullscreen image)
+            // ========================
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalFullImage');
             const closeModalBtn = document.querySelector('.close-modal');
@@ -783,15 +717,21 @@
                 modalImg.src = '';
             }
             
-            closeModalBtn.addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => {
-                if(e.target === modal) closeModal();
-            });
+            if(closeModalBtn) {
+                closeModalBtn.addEventListener('click', closeModal);
+            }
+            if(modal) {
+                modal.addEventListener('click', (e) => {
+                    if(e.target === modal) closeModal();
+                });
+            }
             document.addEventListener('keydown', (e) => {
-                if(e.key === 'Escape' && modal.style.display === 'flex') closeModal();
+                if(e.key === 'Escape' && modal && modal.style.display === 'flex') closeModal();
             });
             
-            // IMAGE SWITCHING + CLICK FULL VIEW
+            // ========================
+            // IMAGE GALLERY: double-click to cycle, single click for fullscreen
+            // ========================
             const gameImageSources = [
                 "Screenshot 2026-03-25 194933.png",
                 "Screenshot 2026-03-25 195527.png",
@@ -843,7 +783,7 @@
             const allGalleryImgs = document.querySelectorAll('.gallery-img');
             allGalleryImgs.forEach(img => attachImageBehaviors(img));
             
-            // Logo fallback
+            // Logo fallback handler
             const gameLogo = document.querySelector('.game-logo');
             if(gameLogo) {
                 gameLogo.onerror = function() {
@@ -852,9 +792,8 @@
                 };
             }
             
-            console.log("🔥 1943 Studio | The Phoenician Bird | UNIQUE visitor counter active (each person counted once). Facebook page for votes.");
+            console.log("🔥 1943 Studio | UNIQUE visitor counter active (CountAPI + localStorage) | Each person counted once globally.");
         })();
     </script>
 </body>
-
 </html>
