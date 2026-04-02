@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/x-icon" href="1943Studio.png">
-    <meta name="1943 Studio official game download website.Most games are free. included games The Phoenician Bird"  content="Download The Phoenician Bird">
+    <meta name="1943 Studio official game download website.Most games are free. included games The Phoenician Bird" content="Download The Phoenician Bird">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>1943 Studio - The Phoenician Bird</title>
     <style>
@@ -353,6 +353,157 @@
             line-height: 1.5;
         }
 
+        /* WARNING MODAL - Google Drive style warning + reassurance */
+        .warning-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.96);
+            backdrop-filter: blur(16px);
+            z-index: 20000;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .warning-card {
+            max-width: 560px;
+            width: 90%;
+            background: #1e1f2c;
+            border-radius: 32px;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.8), 0 0 0 2px #ffcc44, 0 0 0 6px rgba(0,0,0,0.5);
+            overflow: hidden;
+            animation: fadeSlideUp 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .warning-header {
+            background: #0d0e16;
+            padding: 1.2rem 1.5rem;
+            border-bottom: 2px solid #ffaa33;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .warning-header .drive-icon {
+            font-size: 32px;
+        }
+
+        .warning-header h2 {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #ffdd99;
+            letter-spacing: -0.2px;
+        }
+
+        .warning-body {
+            padding: 1.8rem 1.8rem 1.5rem;
+            color: #f0f0f0;
+        }
+
+        .warning-message {
+            background: #2a1f1a;
+            border-left: 6px solid #ff8855;
+            padding: 1rem;
+            border-radius: 18px;
+            margin: 1rem 0;
+        }
+
+        .warning-message p {
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+
+        .file-badge {
+            background: #2c2e3a;
+            border-radius: 40px;
+            padding: 8px 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 1rem;
+            margin: 12px 0;
+            border: 1px solid #ffcc66;
+        }
+
+        .reassure-box {
+            background: #0f2a1f;
+            border-radius: 24px;
+            padding: 1rem;
+            margin: 1.2rem 0;
+            border: 1px solid #88ffaa;
+            color: #ccffdd;
+        }
+
+        .reassure-box strong {
+            color: #ffffaa;
+        }
+
+        .warning-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+
+        .btn-cancel {
+            background: #3a3a4a;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-proceed {
+            background: linear-gradient(95deg, #f0b429, #e07c1f);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 800;
+            color: #1e1a1a;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .btn-proceed:hover {
+            background: linear-gradient(95deg, #ffcc44, #f0a020);
+            transform: scale(1.02);
+        }
+
+        .btn-cancel:hover {
+            background: #5a5a70;
+        }
+
+        .small-note {
+            font-size: 0.75rem;
+            margin-top: 18px;
+            text-align: center;
+            color: #aaa;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -449,6 +600,9 @@
             }
             .game h1 {
                 font-size: 26px;
+            }
+            .warning-card {
+                width: 95%;
             }
         }
     </style>
@@ -556,6 +710,38 @@
         </div>
     </div>
     
+    <!-- GOOGLE DRIVE WARNING MODAL (POPUP BEFORE DOWNLOAD) -->
+    <div id="googleDriveWarningModal" class="warning-modal-overlay">
+        <div class="warning-card">
+            <div class="warning-header">
+                <span class="drive-icon">⚠️📁</span>
+                <h2>Google Drive has detected issues with your download</h2>
+            </div>
+            <div class="warning-body">
+                <div class="warning-message">
+                    <p>🔍 <strong>This file is too large for Google to scan for viruses.</strong></p>
+                    <p>⚡ <strong>This file is executable and won't harm your computer.</strong></p>
+                </div>
+                <div class="file-badge">
+                    📦 <strong>The Phoenician Bird.apk</strong> <span style="color:#ffcc66;">(1.5 GB)</span>
+                </div>
+                <div class="reassure-box">
+                    💠 <strong>✔️ 1943 Studio REASSURANCE:</strong> This game is 100% safe!<br>
+                    The warning appears because of the large file size (1.5GB) — Google Drive cannot scan big APK files automatically. 
+                    We confirm this is the official release of <strong>The Phoenician Bird</strong>, verified by our development team. 
+                    No malicious content. Trust the studio behind the legend.
+                </div>
+                <div class="warning-actions">
+                    <button class="btn-cancel" id="cancelDownloadBtn">◀ Cancel</button>
+                    <button class="btn-proceed" id="proceedDownloadBtn">✅ Download Anyway (Safe)</button>
+                </div>
+                <div class="small-note">
+                    🔒 Your security is important — but this file is from official 1943 Studio source.
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- MODAL FOR FULL IMAGE VIEW -->
     <div id="imageModal" class="modal">
         <span class="close-modal">&times;</span>
@@ -564,25 +750,75 @@
 
     <script>
         (function() {
-            // DOWNLOAD FUNCTION (original Google Drive)
-            function downloadGameFile() {
-                const fileId = '1f-tqdMQZnpLPy9LaK0Dko_LJTXNP-enC';
-                const directDownloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+            // ---- GOOGLE DRIVE WARNING POPUP LOGIC ----
+            const warningModal = document.getElementById('googleDriveWarningModal');
+            const cancelBtn = document.getElementById('cancelDownloadBtn');
+            const proceedBtn = document.getElementById('proceedDownloadBtn');
+            const downloadButton = document.getElementById('downloadBtn');
+            
+            // File ID for The Phoenician Bird (original Google Drive)
+            const FILE_ID = '1f-tqdMQZnpLPy9LaK0Dko_LJTXNP-enC';
+            const DIRECT_DOWNLOAD_URL = `https://drive.google.com/uc?export=download&id=${FILE_ID}`;
+            
+            // Actual download function
+            function performDownload() {
                 const link = document.createElement('a');
-                link.href = directDownloadUrl;
-                link.download = 'Phoenician_Bird_Game.zip';
+                link.href = DIRECT_DOWNLOAD_URL;
+                link.download = 'Phoenician_Bird_Game.apk';   // APK extension as per warning context
                 link.target = '_blank';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
             }
-            const downloadBtn = document.getElementById('downloadBtn');
-            if(downloadBtn) {
-                downloadBtn.removeEventListener('click', downloadGameFile);
-                downloadBtn.addEventListener('click', downloadGameFile);
+            
+            // Show the custom warning modal before download (triggered by download button)
+            function showWarningPopup() {
+                warningModal.style.display = 'flex';
             }
             
-            // READ MORE / LESS
+            function closeWarningModal() {
+                warningModal.style.display = 'none';
+            }
+            
+            // Event listener for the main DOWNLOAD button: show popup first
+            if (downloadButton) {
+                downloadButton.removeEventListener('click', showWarningPopup);
+                downloadButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showWarningPopup();
+                });
+            }
+            
+            // Proceed button: close modal and start download
+            if (proceedBtn) {
+                proceedBtn.addEventListener('click', () => {
+                    closeWarningModal();
+                    performDownload();
+                });
+            }
+            
+            // Cancel button: just close modal, do nothing
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', () => {
+                    closeWarningModal();
+                });
+            }
+            
+            // Click outside overlay to close (optional, user-friendly)
+            warningModal.addEventListener('click', (e) => {
+                if (e.target === warningModal) {
+                    closeWarningModal();
+                }
+            });
+            
+            // Escape key closes modal
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && warningModal.style.display === 'flex') {
+                    closeWarningModal();
+                }
+            });
+            
+            // READ MORE / LESS functionality
             const readMore = document.getElementById('b1');
             const readLess = document.getElementById('b2');
             const shortDesc = document.getElementById('read1');
@@ -600,20 +836,14 @@
                     fullDesc.style.display = 'none';
                 }
             }
-            if(readMore) {
-                readMore.removeEventListener('click', expandDesc);
-                readMore.addEventListener('click', expandDesc);
-            }
-            if(readLess) {
-                readLess.removeEventListener('click', collapseDesc);
-                readLess.addEventListener('click', collapseDesc);
-            }
+            if(readMore) readMore.addEventListener('click', expandDesc);
+            if(readLess) readLess.addEventListener('click', collapseDesc);
             if(shortDesc && fullDesc) {
                 shortDesc.style.display = 'block';
                 fullDesc.style.display = 'none';
             }
             
-            // MODAL LOGIC
+            // MODAL FOR GALLERY
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalFullImage');
             const closeModalBtn = document.querySelector('.close-modal');
@@ -626,16 +856,15 @@
                 modal.style.display = 'none';
                 modalImg.src = '';
             }
-            
-            closeModalBtn.addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => {
+            if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+            if(modal) modal.addEventListener('click', (e) => {
                 if(e.target === modal) closeModal();
             });
             document.addEventListener('keydown', (e) => {
                 if(e.key === 'Escape' && modal.style.display === 'flex') closeModal();
             });
             
-            // IMAGE SWITCHING + CLICK FULL VIEW
+            // IMAGE SWITCH + CLICK full view
             const gameImageSources = [
                 "Screenshot 2026-03-25 194933.png",
                 "Screenshot 2026-03-25 195527.png",
@@ -692,11 +921,10 @@
             if(gameLogo) {
                 gameLogo.onerror = function() {
                     this.src = 'https://placehold.co/70x70/2c3e50/ffcc44?text=PHOENIX';
-                    this.alt = 'Phoenician Bird Logo';
                 };
             }
             
-            console.log("🔥 1943 Studio | The Phoenician Bird | Facebook button ready - visit page for votes & updates");
+            console.log("🔥 1943 Studio | The Phoenician Bird | Google Drive warning popup active - reassuring users before download");
         })();
     </script>
 </body>
