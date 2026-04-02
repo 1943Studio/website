@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/x-icon" href="1943Studio.png">
-    <meta name="1943 Studio official game download website.Most games are free. included games The Phoenician Bird" content="Download The Phoenician Bird">
+    <meta name="1943 Studio official game download website.Most games are free. included games The Phoenician Bird"  content="Download The Phoenician Bird">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>1943 Studio - The Phoenician Bird | Unique Visitor Counter</title>
+    <title>1943 Studio - The Phoenician Bird</title>
     <style>
         * {
             margin: 0;
@@ -109,6 +110,7 @@
             text-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
+        /* SINGLE FACEBOOK BUTTON SECTION - Clean and minimal */
         .facebook-link-section {
             margin: 1.5rem 0 2rem 0;
             text-align: center;
@@ -177,12 +179,20 @@
             transform: translateY(-2px);
         }
 
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
         .game-title-area {
             display: flex;
             align-items: center;
             gap: 20px;
             flex-wrap: wrap;
-            margin-bottom: 15px;
         }
 
         .game-logo {
@@ -214,7 +224,6 @@
             display: flex;
             gap: 18px;
             flex-wrap: wrap;
-            margin-bottom: 15px;
         }
 
         .tag {
@@ -420,35 +429,12 @@
             color: #ffdd99;
         }
         
-        .visitor-counter {
-            display: inline-flex;
+        .game-icon-wrapper {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
             align-items: center;
-            gap: 12px;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(12px);
-            padding: 10px 24px;
-            border-radius: 60px;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            border: 1px solid #ffcc66;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffecb3;
-            letter-spacing: 0.5px;
-            width: fit-content;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.4);
-        }
-        .visitor-counter span {
-            font-size: 1.6rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #FFD966, #FFB347);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-left: 6px;
-        }
-        .visitor-icon {
-            font-size: 1.7rem;
+            margin-bottom: 15px;
         }
         
         @media (max-width: 650px) {
@@ -464,11 +450,10 @@
             .game h1 {
                 font-size: 26px;
             }
-            .visitor-counter span { font-size: 1.3rem; }
-            .visitor-counter { padding: 6px 18px; gap: 8px; }
         }
     </style>
 </head>
+
 <body>
     <header>
         <h1>1943 Studio</h1>
@@ -476,6 +461,7 @@
     <div id="aaa">
         <h1>⚔️ LEGENDARY DOWNLOADS ⚔️</h1>
         
+        <!-- SINGLE FACEBOOK BUTTON - Visit our Facebook page to see votes and updates -->
         <div class="facebook-link-section">
             <a href="https://www.facebook.com/people/1943-Studio/61582173840823/" target="_blank" rel="noopener noreferrer" class="fb-single-button">
                 <span class="fb-icon-large">📘</span>
@@ -485,13 +471,15 @@
         </div>
         
         <div class="game">
-            <div class="game-title-area">
-                <img class="game-logo" src="logo.png" alt="The Phoenician Bird Logo" onerror="this.src='https://placehold.co/70x70/2c3e50/ffcc44?text=PHX'">
-                <h1>THE PHOENICIAN BIRD</h1>
-            </div>
-            <div class="game-tags">
-                <span class="tag age">🔞 12+</span>
-                <span class="tag size">💾 1.50 GB</span>
+            <div class="game-icon-wrapper">
+                <div class="game-title-area">
+                    <img class="game-logo" src="logo.png" alt="The Phoenician Bird Logo" onerror="this.src='https://placehold.co/70x70/2c3e50/ffcc44?text=PHX'">
+                    <h1>THE PHOENICIAN BIRD</h1>
+                </div>
+                <div class="game-tags">
+                    <span class="tag age">🔞 12+</span>
+                    <span class="tag size">💾 1.50 GB</span>
+                </div>
             </div>
             <button class="Downloader" id="downloadBtn">⬇ DOWNLOAD</button>
             <br><br>
@@ -547,6 +535,7 @@
                 <br><span id="b2" class="b1 learn-more-btn">⬆ learn less</span>
             </div>
             
+            <!-- GALLERY SECTION: CLICK TO VIEW FULL IMAGE, DOUBLE CLICK TO SWITCH BETWEEN SCREENSHOTS -->
             <div class="image-gallery" id="dynamicGallery">
                 <img class="gallery-img" src="Screenshot 2026-03-25 194933.png" alt="Game scene 1">
                 <img class="gallery-img" src="Screenshot 2026-03-25 195527.png" alt="Game scene 2">
@@ -565,13 +554,9 @@
                 ✦ THE PHOENICIAN BIRD | EPIC HISTORICAL COMBAT | OFFICIAL LOGO ✦
             </div>
         </div>
-        
-        <!-- UNIQUE VISITOR COUNTER - Working reliable API (countapi.vercel.app) -->
-        <div class="visitor-counter" id="visitorCounterDisplay">
-            <span class="visitor-icon"></span> UNIQUE VISITORS: <span id="visitorCountValue">--</span>
-        </div>
     </div>
-
+    
+    <!-- MODAL FOR FULL IMAGE VIEW -->
     <div id="imageModal" class="modal">
         <span class="close-modal">&times;</span>
         <img id="modalFullImage" src="" alt="Full size view">
@@ -579,62 +564,7 @@
 
     <script>
         (function() {
-            // =====================================================
-            // RELIABLE UNIQUE VISITOR COUNTER - Tested & Working
-            // Uses countapi.vercel.app (confirmed to return values)
-            // Each unique browser/device is counted exactly ONCE.
-            // First visitor sees "1", each new visitor increments.
-            // =====================================================
-            
-            const VISITED_KEY = '1943_phoenix_unique_visited';
-            const PAGE_ID = '1943studio_phoenician_bird_official';
-            
-            async function updateVisitorCount() {
-                const alreadyCounted = localStorage.getItem(VISITED_KEY);
-                const countSpan = document.getElementById('visitorCountValue');
-                
-                // First, try to register a new unique hit (only if not counted before)
-                if (!alreadyCounted) {
-                    try {
-                        // This increments the counter ONLY for new unique visitors
-                        const hitResponse = await fetch(`https://countapi.vercel.app/hit/${PAGE_ID}/unique`);
-                        const hitData = await hitResponse.json();
-                        console.log('✅ New visitor registered:', hitData);
-                        // Mark this browser as counted (even if API fails, avoid double counting next time)
-                        localStorage.setItem(VISITED_KEY, 'true');
-                    } catch (err) {
-                        console.warn('⚠️ Could not register hit, but will mark as visited to prevent future retries:', err);
-                        // Still mark as visited to avoid endless retries on next page loads
-                        localStorage.setItem(VISITED_KEY, 'true');
-                    }
-                }
-                
-                // Always fetch the current total count and display it
-                try {
-                    const getResponse = await fetch(`https://countapi.vercel.app/get/${PAGE_ID}/unique`);
-                    const getData = await getResponse.json();
-                    const total = getData.value !== undefined ? getData.value : 0;
-                    
-                    if (countSpan) {
-                        countSpan.innerText = total;
-                    }
-                    console.log(`✅ Current unique visitor total: ${total}`);
-                    return total;
-                } catch (err) {
-                    console.error('❌ Failed to fetch visitor count:', err);
-                    if (countSpan) {
-                        countSpan.innerText = '?';
-                    }
-                    return 0;
-                }
-            }
-            
-            // Execute the counter
-            updateVisitorCount();
-            
-            // ============================================
-            // DOWNLOAD FUNCTION
-            // ============================================
+            // DOWNLOAD FUNCTION (original Google Drive)
             function downloadGameFile() {
                 const fileId = '1f-tqdMQZnpLPy9LaK0Dko_LJTXNP-enC';
                 const directDownloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
@@ -646,16 +576,13 @@
                 link.click();
                 document.body.removeChild(link);
             }
-            
             const downloadBtn = document.getElementById('downloadBtn');
             if(downloadBtn) {
                 downloadBtn.removeEventListener('click', downloadGameFile);
                 downloadBtn.addEventListener('click', downloadGameFile);
             }
             
-            // ============================================
             // READ MORE / LESS
-            // ============================================
             const readMore = document.getElementById('b1');
             const readLess = document.getElementById('b2');
             const shortDesc = document.getElementById('read1');
@@ -686,9 +613,7 @@
                 fullDesc.style.display = 'none';
             }
             
-            // ============================================
-            // MODAL FOR IMAGES
-            // ============================================
+            // MODAL LOGIC
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalFullImage');
             const closeModalBtn = document.querySelector('.close-modal');
@@ -702,21 +627,15 @@
                 modalImg.src = '';
             }
             
-            if(closeModalBtn) {
-                closeModalBtn.addEventListener('click', closeModal);
-            }
-            if(modal) {
-                modal.addEventListener('click', (e) => {
-                    if(e.target === modal) closeModal();
-                });
-            }
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if(e.target === modal) closeModal();
+            });
             document.addEventListener('keydown', (e) => {
-                if(e.key === 'Escape' && modal && modal.style.display === 'flex') closeModal();
+                if(e.key === 'Escape' && modal.style.display === 'flex') closeModal();
             });
             
-            // ============================================
-            // IMAGE GALLERY: double-click to cycle, single click for fullscreen
-            // ============================================
+            // IMAGE SWITCHING + CLICK FULL VIEW
             const gameImageSources = [
                 "Screenshot 2026-03-25 194933.png",
                 "Screenshot 2026-03-25 195527.png",
@@ -777,8 +696,9 @@
                 };
             }
             
-            console.log("1943 Studio | UNIQUE visitor counter active | Each person counted once globally. First visitor = 1, then increments.");
+            console.log("🔥 1943 Studio | The Phoenician Bird | Facebook button ready - visit page for votes & updates");
         })();
     </script>
 </body>
+
 </html>
