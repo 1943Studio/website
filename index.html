@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>1943 STUDIO | Main Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* BODY — fixed background image as provided */
+        body {
+            background-image: url(1943studio.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center center;
+            font-family: system-ui, 'Segoe UI', 'Arial', sans-serif;
+            min-height: 100vh;
+        }
+
+        /* ---------- FIXED HEADER ZONE (stays on top while scrolling) ---------- */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* HEADER MAIN STYLES — original green + border, now with subtle animated color */
+        header {
+            text-align: center;
+            background-color: rgb(1, 112, 1);
+            border-color: green;
+            border-style: solid;
+            border-width: 3px;
+            border-top: none;
+            /* BARELY NOTICEABLE ANIMATION — very subtle shift between deep greens */
+            animation: gentleGlow 9s infinite alternate ease-in-out;
+        }
+
+        @keyframes gentleGlow {
+            0% {
+                background-color: rgb(1, 98, 1);
+                border-color: #2e7d32;
+            }
+            25% {
+                background-color: rgb(8, 106, 8);
+                border-color: #3c8c40;
+            }
+            50% {
+                background-color: rgb(2, 104, 2);
+                border-color: #2b7a2f;
+            }
+            75% {
+                background-color: rgb(1, 115, 1);
+                border-color: #3f9142;
+            }
+            100% {
+                background-color: rgb(6, 102, 6);
+                border-color: #2c6e2f;
+            }
+        }
+
+        /* header text styles — exactly as original */
+        header h1 {
+            font-size: 2cm;
+            margin-bottom: 0cm;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-weight: 700;
+        }
+        header h3 {
+            margin-top: 0cm;
+            font-size: 0.75cm;
+            background-color: green;
+            display: inline-block;
+            padding: 0.1rem 1.5rem;
+            border-radius: 4px;
+            color: #f0f0f0;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        /* SPACER: prevents content from hiding under fixed header */
+        .header-spacer {
+            height: 0;
+        }
+        
+        /* MAIN content zone */
+        .main-content {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 5rem 1.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* BUTTONS container — make them touch (no gap, side by side) */
+        .button-strip {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0;              /* ZERO GAP: buttons touch exactly */
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* MENU BUTTON — original design: skew, width fit-content, same dimensions */
+        .menu {
+            height: 0.75cm;
+            width: fit-content;
+            transform: skew(-35deg);
+            margin: 0px;
+            cursor: pointer;
+            background: #0a2f1f;
+            border: 2px solid #e0c878;
+            color: #ffefc0;
+            font-weight: bold;
+            font-size: 0.9rem;
+            padding: 0 1.2rem;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: monospace, 'Courier New', monospace;
+            text-transform: uppercase;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        /* Make skewed buttons touch edge-to-edge */
+        .button-strip .menu {
+            margin-right: -6px;
+            margin-left: 0px;
+        }
+        .button-strip .menu:last-child {
+            margin-right: 0;
+        }
+        .menu:hover {
+            background-color: #3c7845;
+            color: white;
+            border-color: #ffd966;
+            transform: skew(-35deg) scale(1.02);
+            box-shadow: 0 0 8px rgba(210,180,80,0.6);
+        }
+
+        /* TikTok button specific style — black background as requested */
+        .menu-tiktok {
+            background: #000000;
+            border-color: #25F4EE;
+            color: #ffffff;
+        }
+        .menu-tiktok:hover {
+            background-color: #111111;
+            border-color: #FE2C55;
+            transform: skew(-35deg) scale(1.02);
+        }
+
+        /* Facebook button style (optional but clean) */
+        .menu-facebook {
+            background: #1877F2;
+            border-color: #ffffff;
+            color: white;
+        }
+        .menu-facebook:hover {
+            background-color: #0d6ad4;
+            border-color: #ffd966;
+        }
+
+        /* Download button style (greenish) */
+        .menu-download {
+            background: #0a2f1f;
+        }
+        
+        /* Responsive: if screen too narrow, buttons stack vertically but still touch */
+        @media (max-width: 650px) {
+            .button-strip {
+                flex-direction: column;
+                align-items: center;
+                gap: 0;
+            }
+            .button-strip .menu {
+                margin-right: 0;
+                margin-bottom: -4px;
+                transform: skew(-35deg);
+            }
+            .button-strip .menu:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        /* Content blocks styling */
+        .content-block {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 24px;
+            padding: 2rem;
+            margin-top: 2rem;
+            color: #f0f0f0;
+            border-left: 6px solid #2e7d32;
+        }
+        .content-block p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        .content-block strong {
+            color: #d4e6b0;
+        }
+        .game-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffd966;
+            margin-top: 0.5rem;
+        }
+        .placeholder-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .demo-scroll-note {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0,0,0,0.5);
+            border-radius: 40px;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1rem;
+            background: rgba(0,20,0,0.7);
+            border-radius: 40px;
+            color: #bbb;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FIXED HEADER SECTION - stays on top while scrolling -->
+    <div class="fixed-header">
+        <header>
+            <h1>1943 STUDIO</h1>
+            <h3>Main Page</h3>
+        </header>
+    </div>
+
+    <!-- DYNAMIC SPACER: prevents content overlap with fixed header -->
+    <div id="dynamic-spacer" class="header-spacer"></div>
+
+    <main class="main-content">
+        <!-- BUTTON SECTION: three buttons that TOUCH each other (Download, Facebook, TikTok) -->
+        <div class="button-strip">
+            <button class="menu menu-download" id="downloadBtn">Go to download page</button>
+            <button class="menu menu-facebook" id="facebookBtn">Follow on Facebook</button>
+            <button class="menu menu-tiktok" id="tiktokBtn">Follow on TikTok</button>
+        </div>
+
+        <!-- Content section with your specific text -->
+        <div class="placeholder-grid">
+            <div class="content-block">
+                <p><strong>Welcome to 1943 STUDIO main page.</strong> This is the main page. Use the buttons above to navigate to the download section or follow us on social media.</p>
+                <p>The specific number 1943 was chosen because it indicates the year Lebanon gained independence.</p>
+                <p>Games available:<br><strong class="game-title">🎮 The Phoenician Bird</strong></p>
+            </div>
+        </div>
+        
+        <div class="demo-scroll-note">
+            ↓ Header fixed — buttons touching — animated green border (barely noticeable) ↓
+        </div>
+        
+        <footer>
+            1943 STUDIO — Est. independent spirit
+        </footer>
+    </main>
+
+    <script>
+        (function() {
+            // Set dynamic spacer height to prevent content from hiding under fixed header
+            const headerFixed = document.querySelector('.fixed-header');
+            const spacer = document.getElementById('dynamic-spacer');
+            
+            function updateSpacerHeight() {
+                if (headerFixed && spacer) {
+                    const headerHeight = headerFixed.offsetHeight;
+                    spacer.style.height = headerHeight + 'px';
+                }
+            }
+            
+            updateSpacerHeight();
+            window.addEventListener('resize', () => {
+                updateSpacerHeight();
+            });
+            window.addEventListener('load', () => {
+                updateSpacerHeight();
+                setTimeout(updateSpacerHeight, 50);
+            });
+            
+            if (window.ResizeObserver) {
+                const resizeObserver = new ResizeObserver(() => {
+                    updateSpacerHeight();
+                });
+                if (headerFixed) resizeObserver.observe(headerFixed);
+            }
+            
+            // BUTTON FUNCTIONALITY
+            // Download button - opens your game download page in new tab
+            const downloadBtn = document.getElementById('downloadBtn');
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', function() {
+                    window.open("https://1943studio.github.io/website/1943StudioWebsiteGameDownload.html", "_blank");
+                });
+            }
+            
+            // Facebook button - opens your Facebook profile
+            const facebookBtn = document.getElementById('facebookBtn');
+            if (facebookBtn) {
+                facebookBtn.addEventListener('click', function() {
+                    window.open("https://www.facebook.com/profile.php?id=61582173840823", "_blank");
+                });
+            }
+            
+            // TikTok button - opens your TikTok profile (black background style applied)
+            const tiktokBtn = document.getElementById('tiktokBtn');
+            if (tiktokBtn) {
+                tiktokBtn.addEventListener('click', function() {
+                    window.open("https://www.tiktok.com/@1943studio?_r=1&_t=ZS-95JRYQZcQ7d", "_blank");
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
