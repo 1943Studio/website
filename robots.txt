@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Point Google to your sitemap so it understands your site structure
+Sitemap: https://github.io
