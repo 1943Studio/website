@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>cine club</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* slight polish, but doesnt break typing */
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-image: url('ocean.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Roboto', sans-serif;
+            padding: 20px;
+            backdrop-filter: brightness(0.96);
+        }
+
+        /* main glassmorphic card */
+        #main {
+            border-radius: 1.8rem;
+            height: auto;
+            min-height: 70vh;
+            width: 90vw;
+            max-width: 800px;
+            background: rgba(0, 30, 50, 0.55);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            padding: 2rem 1.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,240,0.3);
+        }
+
+        /* menu & quiz panels */
+        .menu-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.8rem;
+            margin: 2rem 0 1rem;
+        }
+
+        .school-btn {
+            background: linear-gradient(135deg, #0b2b3b, #0a1f2c);
+            border: none;
+            font-size: 1.7rem;
+            font-weight: bold;
+            padding: 1rem 2rem;
+            border-radius: 4rem;
+            color: #f0f9ff;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: 0.2s;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+            width: 220px;
+            font-family: inherit;
+            border: 1px solid rgba(255,255,200,0.5);
+        }
+
+        .school-btn:hover {
+            transform: scale(1.03);
+            background: linear-gradient(135deg, #135e7a, #0e3345);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+            color: white;
+            border-color: #ffefb9;
+        }
+
+        /* quiz card style */
+        .quiz-container {
+            background: rgba(10, 25, 35, 0.85);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            margin-top: 1rem;
+            text-align: left;
+            color: #f0f6fa;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,210,0.4);
+        }
+
+        .quiz-question {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+            background: rgba(0,0,0,0.3);
+            padding: 0.8rem;
+            border-radius: 1.5rem;
+            text-align: center;
+        }
+
+        .quiz-input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            font-size: 1.1rem;
+            border-radius: 3rem;
+            border: none;
+            background: #fef9e8;
+            color: #021c27;
+            font-weight: 500;
+            outline: none;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-family: monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .quiz-input:focus {
+            background: #fff5e0;
+            box-shadow: 0 0 0 3px #ffd966;
+        }
+
+        .btn-submit {
+            background: #ffb347;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 3rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1f3e48;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-right: 0.8rem;
+            font-family: inherit;
+        }
+
+        .btn-submit:hover {
+            background: #ffa01e;
+            transform: scale(0.97);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .btn-back {
+            background: rgba(200,220,240,0.2);
+            border: 1px solid #ffecb3;
+            padding: 0.7rem 1.5rem;
+            border-radius: 3rem;
+            font-size: 1rem;
+            color: #fff1cf;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-back:hover {
+            background: rgba(255,255,210,0.3);
+            color: white;
+        }
+
+        .message {
+            margin-top: 1rem;
+            font-size: 1.05rem;
+            padding: 0.6rem;
+            border-radius: 2rem;
+            background: rgba(0,0,0,0.5);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .success-msg {
+            background: #1c6d4a;
+            color: #e6ffe6;
+        }
+
+        .error-msg {
+            background: #9e3c2e;
+            color: #ffe0db;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            text-shadow: 2px 2px 3px rgba(0,0,0,0.3);
+        }
+
+        .school-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 0.8rem;
+            border-bottom: 2px dashed rgba(255,220,150,0.6);
+            padding-bottom: 0.5rem;
+        }
+
+        footer {
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            opacity: 0.7;
+            color: #cbe5f0;
+        }
+
+        @media (max-width: 550px) {
+            #main {
+                padding: 1.2rem;
+                width: 95vw;
+            }
+            .quiz-question {
+                font-size: 1.1rem;
+            }
+            .school-btn {
+                width: 180px;
+                font-size: 1.3rem;
+                padding: 0.7rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="main">
+    <!-- dynamic views will be rendered here -->
+    <div id="app-root">
+        <!-- initial menu view -->
+        <div id="menu-view">
+            <h2>🎬 CINE CLUB 🎥</h2>
+            <div class="menu-buttons">
+                <button class="school-btn" data-school="bab"> Bab el Louk</button>
+                <button class="school-btn" data-school="cnd"> CND</button>
+            </div>
+            <footer>Choisis ton établissement et réponds aux questions du film "Les Nageuses"</footer>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ----------------------------- CORRECTED DATA & TYPOS FIXED ---------------------------------
+    // School definitions with questions and expected answers (original french text, typos corrected as requested)
+    // School 1 : Bab el louk (first school)
+    // School 2 : CND
+    
+    const schoolsData = {
+        bab: {
+            name: "Bab el Louk",
+            questions: [
+                {
+                    text: "Dans le film Les Nageuses, Sara ne nageait pas pour survivre... elle nageait pour quelque chose qu'elle voyait dans son coeur avant que ça devienne réalité.",
+                    expected: "rêve",   // correct answer: rêve (with accent) user typed 'reve' is accepted below? we need exact? but instructions say "answers reve or rêve" : both accepted.
+                    // we will accept both "reve" (sans accent) and "rêve" (accent)
+                    acceptAlternate: true,
+                    altValues: ["reve", "rêve"]
+                },
+                {
+                    text: "Dans le film Les Nageuses, au moment où la mer devient violente et imprévisible, on dirait que quelque chose d'invisible, immense et effrayant prend le contrôle de l'eau.",
+                    expected: "monstre",
+                    acceptAlternate: false,
+                    altValues: ["monstre"]
+                }
+            ]
+        },
+        cnd: {
+            name: "CND",
+            questions: [
+                {
+                    text: "Dans le film Les Nageuses, quand Sara et Yusra se jettent dans la mer en pleine nuit pour sauver les autres, elles font un geste très courageux où on donne quelque chose de soi pour les autres.",
+                    expected: "sacrificielle",
+                    acceptAlternate: false,
+                    altValues: ["sacrificielle"]
+                },
+                {
+                    text: "Dans le film Les Nageuses, après tout ce qu'elle a traversé - la guerre, la mer, la peur - Sara arrive à recommencer une nouvelle vie, comme si elle renaissait plus forte qu'avant.",
+                    expected: "renaissance",
+                    acceptAlternate: false,
+                    altValues: ["renaissance"]
+                }
+            ]
+        }
+    };
+
+    // Helper: normalize string (trim, lower case, remove accents optionally but we handle explicit)
+    function normalizeAnswer(str) {
+        if (!str) return "";
+        return str.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // remove diacritics for base compare
+    }
+    
+    // For rêve specific: we handle both 'reve' and 'rêve' directly in check logic
+    function isAnswerCorrect(schoolKey, qIndex, userAnswerRaw) {
+        const school = schoolsData[schoolKey];
+        if (!school) return false;
+        const q = school.questions[qIndex];
+        if (!q) return false;
+        
+        let answerClean = userAnswerRaw.trim().toLowerCase();
+        // For 'reve/rêve' question (Bab el louk q1) we use special multi-accept
+        if (schoolKey === 'bab' && qIndex === 0) {
+            const allowed = ["reve", "rêve"];
+            return allowed.includes(answerClean);
+        }
+        // For all others: exact match or normalized match
+        const expectedNorm = q.expected.toLowerCase();
+        const userNorm = answerClean;
+        if (userNorm === expectedNorm) return true;
+        // try without diacritics matching for other fields (optional but safe for 'sacrificielle', 'renaissance', 'monstre')
+        const userNoAccent = answerClean.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const expectedNoAccent = expectedNorm.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        if (userNoAccent === expectedNoAccent) return true;
+        // also check altValues if any (for bab q1 already handled, but generic)
+        if (q.altValues && q.altValues.length) {
+            return q.altValues.some(alt => alt.toLowerCase() === answerClean);
+        }
+        return false;
+    }
+
+    // ----------------------------- STATE MANAGEMENT ---------------------------------
+    let currentSchool = null;      // 'bab' or 'cnd'
+    let currentStep = 0;           // 0 = first question, 1 = second question, 2 = completed (both answered)
+    let answersStatus = [false, false]; // track if each question was correctly answered
+    
+    // We'll store UI container
+    const appRoot = document.getElementById('app-root');
+    
+    // Render functions
+    function renderMainMenu() {
+        appRoot.innerHTML = `
+            <div id="menu-view">
+                <h2>🎬 CINE CLUB 🎥</h2>
+                <div class="menu-buttons">
+                    <button class="school-btn" data-school="bab"> Bab el Louk</button>
+                    <button class="school-btn" data-school="cnd"> CND</button>
+                </div>
+                <footer>Choisis ton établissement et réponds aux questions du film "Les Nageuses"</footer>
+            </div>
+        `;
+        // attach event listeners to buttons
+        const cndBtn = appRoot.querySelector('[data-school="cnd"]');
+        const babBtn = appRoot.querySelector('[data-school="bab"]');
+        if (cndBtn) cndBtn.addEventListener('click', () => startSchoolQuiz('cnd'));
+        if (babBtn) babBtn.addEventListener('click', () => startSchoolQuiz('bab'));
+    }
+    
+    function startSchoolQuiz(schoolKey) {
+        currentSchool = schoolKey;
+        currentStep = 0;
+        answersStatus = [false, false];
+        renderQuizView();
+    }
+    
+    function renderQuizView() {
+        if (!currentSchool) {
+            renderMainMenu();
+            return;
+        }
+        const school = schoolsData[currentSchool];
+        if (!school) {
+            renderMainMenu();
+            return;
+        }
+        // if both questions completed -> show congratulations & back to menu
+        if (answersStatus[0] === true && answersStatus[1] === true) {
+            // completion view
+            appRoot.innerHTML = `
+                <div class="quiz-container">
+                    <div class="school-header">
+                        <span style="font-size:1.6rem;">🏆 ${school.name}</span>
+                        <button class="btn-back" id="backToMenuBtn">🏠 Menu principal</button>
+                    </div>
+                    <div style="text-align:center; padding: 1.5rem;">
+                        <h2>✨ Félicitations ! ✨</h2>
+                        <p style="font-size:1.2rem; margin-top:1rem;">Tu as répondu correctement aux deux questions sur <strong>"Les Nageuses"</strong>.</p>
+                        <p style="margin-top:0.5rem;">👏</p>
+                        <button class="btn-submit" id="restartSchoolBtn" style="margin-top:1.5rem;">📽️ Refaire le quiz</button>
+                        <button class="btn-back" id="menuAfterCompleteBtn" style="margin-top:1rem; margin-left:0.5rem;">🔁 Changer d'école</button>
+                    </div>
+                </div>
+            `;
+            const backBtn = document.getElementById('backToMenuBtn');
+            const restartBtn = document.getElementById('restartSchoolBtn');
+            const menuCompleteBtn = document.getElementById('menuAfterCompleteBtn');
+            if (backBtn) backBtn.addEventListener('click', () => { resetAndGoMenu(); });
+            if (restartBtn) restartBtn.addEventListener('click', () => { startSchoolQuiz(currentSchool); });
+            if (menuCompleteBtn) menuCompleteBtn.addEventListener('click', () => { resetAndGoMenu(); });
+            return;
+        }
+        
+        // find current unanswered question index
+        let activeIndex = -1;
+        for (let i = 0; i < answersStatus.length; i++) {
+            if (!answersStatus[i]) {
+                activeIndex = i;
+                break;
+            }
+        }
+        if (activeIndex === -1) {
+            // should not happen, but fallback
+            answersStatus = [true, true];
+            renderQuizView();
+            return;
+        }
+        currentStep = activeIndex;
+        const questionObj = school.questions[activeIndex];
+        const questionNumber = activeIndex + 1;
+        
+        // Build extra hint for special "reve/rêve" to be gentle
+        let extraHint = '';
+        if (currentSchool === 'bab' && activeIndex === 0) {
+            extraHint = `<div style="font-size:0.8rem; background: rgba(0,0,0,0.4); display:inline-block; padding:0.2rem 0.8rem; border-radius:2rem;">💡 ()</div>`;
+        }
+        
+        appRoot.innerHTML = `
+            <div class="quiz-container">
+                <div class="school-header">
+                    <span style="font-weight:bold; font-size:1.3rem;">🎬 ${school.name} · Question ${questionNumber}/2</span>
+                    <button class="btn-back" id="quitToMenuBtn">✖ Quitter</button>
+                </div>
+                <div class="quiz-question">
+                    ${questionObj.text}
+                    ${extraHint}
+                </div>
+                <input type="text" id="quizAnswerInput" class="quiz-input" placeholder="Tape ta réponse ici..." autocomplete="off" autofocus>
+                <div style="display: flex; gap:1rem; justify-content: center; flex-wrap:wrap;">
+                    <button id="submitAnswerBtn" class="btn-submit">✓ Valider</button>
+                    <button id="resetSchoolBtn" class="btn-back">⟳ Recommencer le quiz</button>
+                </div>
+                <div id="messageBox" class="message"></div>
+                <footer style="margin-top:1.2rem;">Écris la réponse exacte (orthographe du film)</footer>
+            </div>
+        `;
+        
+        const submitBtn = document.getElementById('submitAnswerBtn');
+        const quitBtn = document.getElementById('quitToMenuBtn');
+        const resetBtn = document.getElementById('resetSchoolBtn');
+        const inputField = document.getElementById('quizAnswerInput');
+        
+        function handleSubmit() {
+            const userAnswer = inputField.value;
+            if (!userAnswer.trim()) {
+                const msgDiv = document.getElementById('messageBox');
+                msgDiv.innerHTML = '❌ Merci d\'écrire une réponse.';
+                msgDiv.classList.add('error-msg');
+                msgDiv.classList.remove('success-msg');
+                return;
+            }
+            const isCorrect = isAnswerCorrect(currentSchool, activeIndex, userAnswer);
+            const msgDiv = document.getElementById('messageBox');
+            if (isCorrect) {
+                // mark current question as correct
+                answersStatus[activeIndex] = true;
+                msgDiv.innerHTML = '✅ Bonne réponse ! Bravo.';
+                msgDiv.classList.add('success-msg');
+                msgDiv.classList.remove('error-msg');
+                // after success, re-render to show next question or completion
+                setTimeout(() => {
+                    renderQuizView();
+                }, 800);
+            } else {
+                msgDiv.innerHTML = `❌ Réponse incorrecte. Essaie encore ! (indice : ${getHintForQuestion(currentSchool, activeIndex)})`;
+                msgDiv.classList.add('error-msg');
+                msgDiv.classList.remove('success-msg');
+                inputField.value = '';
+                inputField.focus();
+            }
+        }
+        
+        submitBtn.addEventListener('click', handleSubmit);
+        if (quitBtn) quitBtn.addEventListener('click', () => { resetAndGoMenu(); });
+        if (resetBtn) resetBtn.addEventListener('click', () => { startSchoolQuiz(currentSchool); });
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSubmit();
+        });
+        setTimeout(() => { if(inputField) inputField.focus(); }, 50);
+    }
+    
+    function getHintForQuestion(schoolKey, qIndex) {
+        if (schoolKey === 'bab' && qIndex === 0) return "";
+        if (schoolKey === 'bab' && qIndex === 1) return "";
+        if (schoolKey === 'cnd' && qIndex === 0) return "";
+        if (schoolKey === 'cnd' && qIndex === 1) return "";
+        return "relis le film ou souviens-toi des termes clés";
+    }
+    
+    function resetAndGoMenu() {
+        currentSchool = null;
+        currentStep = 0;
+        answersStatus = [false, false];
+        renderMainMenu();
+    }
+    
+    // tiny fix for global reset, initial menu
+    renderMainMenu();
+</script>
+</body>
+</html>

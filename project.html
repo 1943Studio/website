@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ciné club · chiffres uniques</title>
+    <style>
+        * {
+            user-select: none;
+            box-sizing: border-box;
+            cursor: crosshair;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background-image: url('ocean.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Segoe UI', 'Courier New', monospace;
+            overflow: hidden;
+            position: relative;
+        }
+        .schools-wrapper {
+            position: relative;
+            z-index: 20;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            backdrop-filter: brightness(0.75) blur(2px);
+        }
+        #main {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.65);
+            border-radius: 3rem;
+            padding: 2rem;
+            backdrop-filter: blur(6px);
+        }
+        .name {
+            margin: 0.8cm;
+            width: 5cm;
+            height: 3cm;
+            font-size: larger;
+            background: linear-gradient(145deg, #7ff5f5, #00c4c4);
+            border-radius: 0.7cm;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #1a3a3a;
+            box-shadow: 0 8px 0 #008080;
+            transition: 0.07s linear;
+        }
+        .name:active {
+            transform: translateY(4px);
+        }
+        .floating-lock {
+            position: fixed;
+            bottom: 0.2cm;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            opacity: 0.65;
+            pointer-events: none;
+            z-index: 80;
+        }
+        .hunting-zone {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(1px);
+            z-index: 150;
+            display: none;
+            overflow: hidden;
+        }
+        .numbers-field {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .hidden-number {
+            position: absolute;
+            background: rgba(110, 140, 110, 0.35);
+            color: rgba(40, 65, 55, 0.75);
+            backdrop-filter: blur(1px);
+            font-family: monospace;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            cursor: pointer;
+            transition: 0.05s linear;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 0.5px solid rgba(200, 180, 100, 0.3);
+            text-shadow: 0 0 1px rgba(0,0,0,0.2);
+            font-size: 0.8rem;
+            opacity: 0.45;
+        }
+        .hidden-number:hover {
+            opacity: 0.9;
+            background: rgba(180, 160, 90, 0.7);
+            transform: scale(1.02);
+            border: 1px solid gold;
+        }
+        .hidden-number:active {
+            transform: scale(0.96);
+        }
+        .hunting-hud {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0c2124e6;
+            backdrop-filter: blur(16px);
+            border-radius: 60px;
+            padding: 12px 24px;
+            display: flex;
+            gap: 25px;
+            z-index: 200;
+            border: 1px solid #eac373;
+            font-family: monospace;
+            pointer-events: auto;
+        }
+        .counter-box {
+            background: #021016b3;
+            border-radius: 40px;
+            padding: 6px 20px;
+            color: #ffecb3;
+            font-weight: bold;
+        }
+        .collected-preview {
+            display: flex;
+            gap: 8px;
+            background: #1a2f2a;
+            border-radius: 40px;
+            padding: 5px 18px;
+            flex-wrap: wrap;
+            max-width: 260px;
+        }
+        .preview-chip {
+            background: #e6a017;
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .lock-btn-hunt {
+            background: #5f6a5c;
+            border: none;
+            border-radius: 40px;
+            padding: 5px 24px;
+            font-weight: bold;
+            cursor: default;
+            box-shadow: none;
+            transition: 0.05s linear;
+            color: #ddd;
+        }
+        .lock-btn-hunt.active {
+            background: #c2883a;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #6b3f00;
+            color: black;
+        }
+        .lock-btn-hunt.active:active {
+            transform: translateY(2px);
+        }
+        .lock-combo-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.96);
+            backdrop-filter: blur(12px);
+            z-index: 300;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .combo-panel {
+            background: #0f2a2f;
+            border-radius: 70px;
+            padding: 30px 35px;
+            width: 90%;
+            max-width: 580px;
+            text-align: center;
+            border: 2px solid #e4b363;
+        }
+        .combo-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffdfa5;
+            margin-bottom: 5px;
+            min-height: 3rem;
+        }
+        .slots-area {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        .combo-slot {
+            background: #2c241a;
+            width: 85px;
+            height: 85px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.1rem;
+            font-weight: bold;
+            border: 2px solid #c29a4a;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .combo-slot.correct {
+            background: #2a7a2a;
+            border-color: #aaffaa;
+            color: #ccffcc;
+            box-shadow: 0 0 8px #00ff00;
+        }
+        .combo-slot.misplaced {
+            background: #b8a020;
+            border-color: #ffdd77;
+            color: #ffffaa;
+            box-shadow: 0 0 6px #ffcc44;
+        }
+        .combo-slot.wrong {
+            background: #8a3a3a;
+            border-color: #ff8888;
+            color: #ffaaaa;
+            text-decoration: line-through;
+        }
+        .collected-pool {
+            background: #0b1b20;
+            border-radius: 60px;
+            padding: 15px;
+            margin: 15px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .pool-digit {
+            background: #fedba0;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #8b5a2b;
+            transition: 0.03s linear;
+        }
+        .pool-digit:active {
+            transform: translateY(2px);
+        }
+        .hint-mastermind {
+            background: #00000077;
+            border-radius: 50px;
+            padding: 8px;
+            margin: 10px 0;
+            color: #ffcf8a;
+            font-size: 0.9rem;
+        }
+        .combo-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .combo-btn {
+            background: #e6a017;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .secret-word-area {
+            font-size: 1.6rem;
+            font-weight: bold;
+            background: black;
+            display: inline-block;
+            margin-top: 12px;
+            padding: 12px 25px;
+            border-radius: 60px;
+            color: gold;
+        }
+        .back-hunt {
+            background: #3a4a3e;
+            margin-top: 20px;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 20px;
+            color: white;
+            cursor: pointer;
+        }
+        #back{
+            position: fixed;
+            right: 0.6cm;
+            bottom: 0.4cm;
+            z-index: 1000;
+            width: 2cm;
+            height: 1cm;
+            font-size: large;
+        }
+    </style>
+</head>
+<body>
+<button id="back" onclick="back()">retour</button>
+<div class="schools-wrapper">
+    <div id="main">
+        <button id="1" class="name"><p>Bab el louk partie 1 <br><span style="font-size:0.7rem;">???</span></p></button>
+        <button id="2" class="name"><p>Bab el louk partie 2<br><span style="font-size:0.7rem;">???</span></p></button><br>
+        <button id="3" class="name"><p>CND partie 1<br><span style="font-size:0.7rem;">???</span></p></button>
+        <button id="4" class="name"><p>CND partie 2<br><span style="font-size:0.7rem;">???</span></p></button>
+    </div>
+</div>
+
+<img class="floating-lock" src="image-removebg-preview.png" alt="lock" onerror="this.style.display='none'">
+
+<div id="huntArea" class="hunting-zone">
+    <div id="numbersField" class="numbers-field"></div>
+    <div class="hunting-hud">
+        <div class="counter-box">🔍 trouvés: <span id="foundCounter">0</span> / <span id="totalCounter">10</span></div>
+        <div class="collected-preview" id="miniCollectList"></div>
+        <button id="goToComboBtn" class="lock-btn-hunt" disabled>🔐 tenter le cadenas</button>
+    </div>
+</div>
+
+<div id="comboScreen" class="lock-combo-screen">
+    <div class="combo-panel">
+        <div class="combo-title" id="comboSchoolTitle"></div>
+        <div class="slots-area" id="slotsContainer"></div>
+        <div class="collected-pool" id="digitsPool"></div>
+        <div id="comboHint" class="hint-mastermind">✨ compose un code de 5 chiffres (parmi ceux récoltés, sans répétition) ✨</div>
+        <div class="combo-actions">
+            <button id="submitComboBtn" class="combo-btn">🔓 tester</button>
+            <button id="resetComboBtn" class="combo-btn" style="background:#5f5a4a;">⟳ reset</button>
+        </div>
+        <div id="finalWordDisplay" class="secret-word-area"></div>
+        <button id="backToHuntBtn" class="back-hunt">◀ retour à la chasse</button>
+    </div>
+</div>
+
+<script>
+    const SECRET_WORDS = {
+        1: "reve",
+        2: "monstre",
+        3: "sacrificielle",
+        4: "renaissance"
+    };
+    
+    // Chaque école : code secret (5 chiffres SANS RÉPÉTITION) composé UNIQUEMENT de nombres parmi les 10 collectés
+    let schoolSecretCodes = {1: null, 2: null, 3: null, 4: null};
+    let hiddenNumbersSet = {1: [], 2: [], 3: [], 4: []};
+    let collectedNumbers = {1: [], 2: [], 3: [], 4: []};
+    
+    let currentSchool = null;
+    let currentFloatingElements = [];
+    const TOTAL_TO_FIND = 10;
+    
+    let currentCombo = [null, null, null, null, null];
+    let lastEvaluation = null;
+    
+    // Génère 10 nombres uniques entre 1 et 19
+    function generate10HiddenNumbers() {
+        let numbers = [];
+        while (numbers.length < 10) {
+            let r = Math.floor(Math.random() * 19) + 1;
+            if (!numbers.includes(r)) numbers.push(r);
+        }
+        return numbers;
+    }
+    
+    // Génère le code secret : 5 chiffres UNIQUES (sans répétition) choisis aléatoirement PARMI les 10 nombres collectés
+    function generateSecretCodeFromPool(pool) {
+        // pool contient 10 nombres uniques. On en choisit 5 différents.
+        // On mélange le pool et on prend les 5 premiers
+        const shuffled = [...pool];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled.slice(0, 5);
+    }
+    
+    // Initialise une école : crée les 10 nombres, puis le code secret (5 chiffres uniques) basé sur ces 10
+    function initSchool(schoolId) {
+        const hidden = generate10HiddenNumbers();
+        hiddenNumbersSet[schoolId] = hidden;
+        schoolSecretCodes[schoolId] = generateSecretCodeFromPool(hidden);
+        collectedNumbers[schoolId] = [];
+    }
+    
+    function initAllSchools() {
+        for (let i = 1; i <= 4; i++) {
+            initSchool(i);
+        }
+    }
+    
+    function spawnHiddenNumbers(schoolId) {
+        if (currentFloatingElements.length) {
+            currentFloatingElements.forEach(el => el.remove());
+            currentFloatingElements = [];
+        }
+        const numbersToHide = hiddenNumbersSet[schoolId];
+        if (!numbersToHide) return;
+        
+        const scene = document.getElementById('numbersField');
+        scene.innerHTML = '';
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        const HUD_BOTTOM_SAFE = 110;
+        
+        numbersToHide.forEach((value) => {
+            const numDiv = document.createElement('div');
+            numDiv.className = 'hidden-number';
+            let size = Math.floor(Math.random() * 28) + 22;
+            numDiv.style.opacity = 0.4 + Math.random() * 0.25;
+            numDiv.style.width = size + 'px';
+            numDiv.style.height = size + 'px';
+            numDiv.style.fontSize = (size * 0.55) + 'px';
+            
+            let maxTop = h - size - HUD_BOTTOM_SAFE;
+            if (maxTop < 50) maxTop = h - size - 20;
+            let top = Math.random() * (maxTop - 40) + 30;
+            let left = Math.random() * (w - size - 40) + 20;
+            top = Math.min(top, h - size - 15);
+            left = Math.min(left, w - size - 15);
+            
+            const rotation = (Math.random() * 50) - 25;
+            numDiv.style.left = left + 'px';
+            numDiv.style.top = top + 'px';
+            numDiv.style.transform = `rotate(${rotation}deg)`;
+            numDiv.style.background = `rgba(110, 140, 110, 0.35)`;
+            numDiv.style.border = `0.5px solid rgba(190, 170, 90, 0.4)`;
+            numDiv.textContent = value;
+            numDiv.setAttribute('data-value', value);
+            
+            numDiv.addEventListener('click', (e) => {
+                e.stopPropagation();
+                collectNumber(value, numDiv);
+            });
+            scene.appendChild(numDiv);
+            currentFloatingElements.push(numDiv);
+        });
+    }
+    
+    function collectNumber(num, domElement) {
+        if (currentSchool === null) return;
+        const alreadyCollected = collectedNumbers[currentSchool];
+        if (alreadyCollected.includes(num)) return;
+        
+        alreadyCollected.push(num);
+        updateHUD();
+        
+        if (domElement && domElement.remove) {
+            domElement.remove();
+            const idx = currentFloatingElements.indexOf(domElement);
+            if (idx !== -1) currentFloatingElements.splice(idx, 1);
+        }
+        
+        if (alreadyCollected.length === TOTAL_TO_FIND) {
+            const goBtn = document.getElementById('goToComboBtn');
+            if (goBtn) {
+                goBtn.disabled = false;
+                goBtn.classList.add('active');
+                goBtn.style.background = "#c2883a";
+                goBtn.style.cursor = "pointer";
+                goBtn.style.color = "black";
+            }
+            showHuntMessage("🎉 10 NOMBRES TROUVÉS ! Va au cadenas 🎉");
+        } else {
+            showHuntMessage(`🔍 +1 trouvé ! (${alreadyCollected.length}/10)`, true);
+        }
+    }
+    
+    let huntMsgTimeout = null;
+    function showHuntMessage(msg, temp=true) {
+        const msgDiv = document.createElement('div');
+        msgDiv.textContent = msg;
+        msgDiv.style.position = 'absolute';
+        msgDiv.style.bottom = '100px';
+        msgDiv.style.left = '50%';
+        msgDiv.style.transform = 'translateX(-50%)';
+        msgDiv.style.background = '#000000aa';
+        msgDiv.style.padding = '6px 18px';
+        msgDiv.style.borderRadius = '30px';
+        msgDiv.style.color = '#ffdfa5';
+        msgDiv.style.zIndex = '250';
+        msgDiv.style.fontSize = '0.85rem';
+        msgDiv.style.pointerEvents = 'none';
+        document.body.appendChild(msgDiv);
+        if (huntMsgTimeout) clearTimeout(huntMsgTimeout);
+        huntMsgTimeout = setTimeout(() => {
+            if (msgDiv) msgDiv.remove();
+        }, 1800);
+    }
+    
+    function updateHUD() {
+        const collected = collectedNumbers[currentSchool] || [];
+        document.getElementById('foundCounter').innerText = collected.length;
+        const previewDiv = document.getElementById('miniCollectList');
+        if (previewDiv) {
+            if (collected.length === 0) {
+                previewDiv.innerHTML = '<span style="color:#bba87a;">aucun</span>';
+            } else {
+                previewDiv.innerHTML = collected.slice(0, 8).map(n => `<span class="preview-chip">${n}</span>`).join('') + (collected.length > 8 ? '...' : '');
+            }
+        }
+    }
+    
+    function openHuntZone(schoolId) {
+        currentSchool = schoolId;
+        if (!hiddenNumbersSet[schoolId] || hiddenNumbersSet[schoolId].length === 0) {
+            initSchool(schoolId);
+        }
+        document.getElementById('foundCounter').innerText = collectedNumbers[schoolId].length;
+        document.getElementById('totalCounter').innerText = TOTAL_TO_FIND;
+        const goBtn = document.getElementById('goToComboBtn');
+        const isComplete = (collectedNumbers[schoolId].length === TOTAL_TO_FIND);
+        goBtn.disabled = !isComplete;
+        if (isComplete) {
+            goBtn.classList.add('active');
+            goBtn.style.background = "#c2883a";
+            goBtn.style.cursor = "pointer";
+            goBtn.style.color = "black";
+        } else {
+            goBtn.classList.remove('active');
+            goBtn.style.background = "#5f6a5c";
+            goBtn.style.cursor = "default";
+            goBtn.style.color = "#ddd";
+        }
+        updateHUD();
+        spawnHiddenNumbers(schoolId);
+        document.getElementById('huntArea').style.display = 'block';
+        document.querySelector('.schools-wrapper').style.display = 'none';
+    }
+    
+    function closeHuntToSchools() {
+        document.getElementById('huntArea').style.display = 'none';
+        document.querySelector('.schools-wrapper').style.display = 'flex';
+        if (currentFloatingElements.length) {
+            currentFloatingElements.forEach(el => el.remove());
+            currentFloatingElements = [];
+        }
+        currentSchool = null;
+        lastEvaluation = null;
+    }
+    
+    function openComboScreen() {
+        if (currentSchool === null) return;
+        const collected = collectedNumbers[currentSchool];
+        if (collected.length !== TOTAL_TO_FIND) {
+            showHuntMessage("Il te manque des nombres ! Continue à chercher les 10 chiffres.");
+            return;
+        }
+        document.getElementById('huntArea').style.display = 'none';
+        document.getElementById('comboScreen').style.display = 'flex';
+        
+        // Titre vide comme demandé
+        document.getElementById('comboSchoolTitle').innerHTML = '';
+        
+        resetComboSlots();
+        renderDigitsPool();
+        document.getElementById('comboHint').innerHTML = "✨ compose un code de 5 chiffres (parmi ceux récoltés, sans répétition) ✨";
+        document.getElementById('finalWordDisplay').innerHTML = '';
+        lastEvaluation = null;
+    }
+    
+    function resetComboSlots() {
+        currentCombo = [null, null, null, null, null];
+        lastEvaluation = null;
+        renderSlots();
+    }
+    
+    function renderSlots() {
+        const container = document.getElementById('slotsContainer');
+        container.innerHTML = '';
+        for (let i=0; i<5; i++) {
+            const slotDiv = document.createElement('div');
+            slotDiv.className = 'combo-slot';
+            slotDiv.textContent = currentCombo[i] !== null ? currentCombo[i] : '?';
+            slotDiv.setAttribute('data-index', i);
+            
+            if (lastEvaluation && lastEvaluation.resultPerSlot && lastEvaluation.resultPerSlot[i]) {
+                const status = lastEvaluation.resultPerSlot[i];
+                if (status === 'correct') slotDiv.classList.add('correct');
+                else if (status === 'misplaced') slotDiv.classList.add('misplaced');
+                else if (status === 'wrong') slotDiv.classList.add('wrong');
+            }
+            
+            slotDiv.addEventListener('click', () => {
+                if (currentCombo[i] !== null) {
+                    currentCombo[i] = null;
+                    lastEvaluation = null;
+                    renderSlots();
+                }
+            });
+            container.appendChild(slotDiv);
+        }
+    }
+    
+    function renderDigitsPool() {
+        const poolContainer = document.getElementById('digitsPool');
+        poolContainer.innerHTML = '';
+        const collected = collectedNumbers[currentSchool] || [];
+        if (collected.length === 0) {
+            poolContainer.innerHTML = '<div style="color:#aaa;">aucun chiffre collecté...</div>';
+            return;
+        }
+        collected.forEach(val => {
+            const digitBtn = document.createElement('div');
+            digitBtn.className = 'pool-digit';
+            digitBtn.textContent = val;
+            digitBtn.addEventListener('click', () => {
+                const emptyIndex = currentCombo.findIndex(slot => slot === null);
+                if (emptyIndex === -1) {
+                    document.getElementById('comboHint').innerHTML = "⚠️ tous les slots sont pleins ! clique sur un slot pour l'effacer";
+                    return;
+                }
+                currentCombo[emptyIndex] = val;
+                lastEvaluation = null;
+                renderSlots();
+                document.getElementById('comboHint').innerHTML = `✅ ${val} placé en position ${emptyIndex+1}`;
+            });
+            poolContainer.appendChild(digitBtn);
+        });
+    }
+    
+    // Vérifie que la tentative n'utilise que des chiffres collectés et sans répétition
+    function isGuessValid(guess) {
+        const collected = collectedNumbers[currentSchool];
+        // Vérifier que chaque chiffre est dans la collection
+        for (let i=0; i<guess.length; i++) {
+            if (!collected.includes(guess[i])) return false;
+        }
+        // Vérifier l'absence de répétition dans la tentative (car le code secret n'a pas de répétition)
+        const uniqueCheck = [...new Set(guess)];
+        if (uniqueCheck.length !== guess.length) return false;
+        return true;
+    }
+    
+    function evaluateGuessWithColors(guess, secret) {
+        let sCopy = [...secret];
+        let gCopy = [...guess];
+        let result = new Array(5).fill(null);
+        
+        for (let i=0; i<5; i++) {
+            if (gCopy[i] === sCopy[i]) {
+                result[i] = 'correct';
+                gCopy[i] = null;
+                sCopy[i] = null;
+            }
+        }
+        for (let i=0; i<5; i++) {
+            if (gCopy[i] !== null && result[i] !== 'correct') {
+                const idx = sCopy.indexOf(gCopy[i]);
+                if (idx !== -1) {
+                    result[i] = 'misplaced';
+                    sCopy[idx] = null;
+                } else {
+                    if (result[i] !== 'correct') result[i] = 'wrong';
+                }
+            } else if (result[i] !== 'correct' && result[i] !== 'misplaced') {
+                if (gCopy[i] !== null) result[i] = 'wrong';
+            }
+        }
+        for (let i=0; i<5; i++) {
+            if (result[i] === null && gCopy[i] !== null) result[i] = 'wrong';
+        }
+        
+        const correctPos = result.filter(r => r === 'correct').length;
+        const correctWrongPos = result.filter(r => r === 'misplaced').length;
+        return { correctPos, correctWrongPos, resultPerSlot: result };
+    }
+    
+    function testCombination() {
+        if (currentSchool === null) return;
+        if (currentCombo.includes(null)) {
+            document.getElementById('comboHint').innerHTML = "❌ tous les 5 emplacements doivent être remplis !";
+            return;
+        }
+        
+        if (!isGuessValid(currentCombo)) {
+            document.getElementById('comboHint').innerHTML = "❌ code invalide : utilise uniquement les chiffres collectés (sans répétition)";
+            return;
+        }
+        
+        const secret = schoolSecretCodes[currentSchool];
+        const guess = [...currentCombo];
+        const evaluation = evaluateGuessWithColors(guess, secret);
+        const { correctPos, correctWrongPos, resultPerSlot } = evaluation;
+        
+        lastEvaluation = { guess, secret, resultPerSlot };
+        
+        if (correctPos === 5) {
+            const word = SECRET_WORDS[currentSchool];
+            document.getElementById('finalWordDisplay').innerHTML = `🎬 MOT DÉBLOQUÉ : ${word} 🎬`;
+            document.getElementById('comboHint').innerHTML = `🎉 PARFAIT ! TU AS TROUVÉ LE MOT "${word}" ! 🎉`;
+        } else {
+            document.getElementById('comboHint').innerHTML = `🔎 ${correctPos} bien placé(s) (vert) | ${correctWrongPos} présent(s) mal placé(s) (jaune) | ${5-correctPos-correctWrongPos} incorrect(s) (rouge)`;
+            document.getElementById('finalWordDisplay').innerHTML = '';
+        }
+        renderSlots();
+    }
+    
+    function resetCombo() {
+        resetComboSlots();
+        lastEvaluation = null;
+        document.getElementById('comboHint').innerHTML = "✨ combinaison réinitialisée, recompose le code avec les chiffres collectés ✨";
+        document.getElementById('finalWordDisplay').innerHTML = '';
+        renderSlots();
+    }
+    
+    function backToHuntFromCombo() {
+        document.getElementById('comboScreen').style.display = 'none';
+        document.getElementById('huntArea').style.display = 'block';
+        updateHUD();
+        if (collectedNumbers[currentSchool].length < TOTAL_TO_FIND && currentFloatingElements.length === 0) {
+            spawnHiddenNumbers(currentSchool);
+        }
+    }
+    
+    document.getElementById('1').addEventListener('click', () => openHuntZone(1));
+    document.getElementById('2').addEventListener('click', () => openHuntZone(2));
+    document.getElementById('3').addEventListener('click', () => openHuntZone(3));
+    document.getElementById('4').addEventListener('click', () => openHuntZone(4));
+    document.getElementById('goToComboBtn').addEventListener('click', openComboScreen);
+    document.getElementById('submitComboBtn').addEventListener('click', testCombination);
+    document.getElementById('resetComboBtn').addEventListener('click', resetCombo);
+    document.getElementById('backToHuntBtn').addEventListener('click', backToHuntFromCombo);
+    
+    const exitHuntBtn = document.createElement('button');
+    exitHuntBtn.textContent = '◀ quitter l\'école';
+    exitHuntBtn.style.position = 'absolute';
+    exitHuntBtn.style.bottom = '20px';
+    exitHuntBtn.style.left = '20px';
+    exitHuntBtn.style.background = '#2c3e2b';
+    exitHuntBtn.style.border = 'none';
+    exitHuntBtn.style.borderRadius = '40px';
+    exitHuntBtn.style.padding = '6px 16px';
+    exitHuntBtn.style.color = 'white';
+    exitHuntBtn.style.zIndex = '210';
+    exitHuntBtn.style.cursor = 'pointer';
+    exitHuntBtn.addEventListener('click', () => {
+        if (currentSchool) closeHuntToSchools();
+    });
+    document.getElementById('huntArea').appendChild(exitHuntBtn);
+    
+    initAllSchools();
+    
+    const lockImg = document.querySelector('.floating-lock');
+    if (lockImg) lockImg.onerror = function() { this.style.display = 'none'; };
+function back(){
+    window.location.reload();
+}
+</script>
+</body>
+</html>
